@@ -1,7 +1,6 @@
 .env
 .idea
 .vscode
-composer.lock
 tests/coverage
 vendor
 infection.*

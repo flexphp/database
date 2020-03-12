@@ -1,6 +1,6 @@
 {
-    "name": "flexphp/skeleton",
-    "description": "Skeleton PHP for FlexPHP library",
+    "name": "flexphp/database",
+    "description": "Database PHP for FlexPHP library",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -20,12 +20,12 @@
     },
     "autoload": {
         "psr-4": {
-            "FlexPHP\\Skeleton\\": "src/"
+            "FlexPHP\\Database\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "FlexPHP\\Skeleton\\Tests\\": "tests/"
+            "FlexPHP\\Database\\Tests\\": "tests/"
         }
     },
     "scripts": {
