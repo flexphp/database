@@ -14,6 +14,6 @@ use FlexPHP\Database\Factories\UserFactory;
 interface UserInterface
 {
     public function __construct(string $name, string $password, string $host);
-    
-    public function setFactory(UserFactory $factory);
+
+    public function setFactory(UserFactory $factory): void;
 }

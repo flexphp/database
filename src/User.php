@@ -43,7 +43,7 @@ class User implements UserInterface
         $this->setFactory(new MySQLUserFactory());
     }
 
-    public function setFactory(UserFactory $factory)
+    public function setFactory(UserFactory $factory): void
     {
         $this->factory = $factory;
         $this->factory->setName($this->name);
