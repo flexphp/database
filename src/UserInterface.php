@@ -9,21 +9,11 @@
  */
 namespace FlexPHP\Database;
 
+use FlexPHP\Database\Factories\UserFactory;
+
 interface UserInterface
 {
-    public function __construct(string $name, string $password, string $host, string $driver);
-
-    public function setName(string $name): void;
-
-    public function setPassword(string $password): void;
-
-    public function setHost(string $host): void;
-
-    public function setGrants(array $permissions, string $database, string $table): void;
-
-    public function setDriver(string $driver): void;
-
-    public function asCreate(): string;
-
-    public function asDrop(): string;
+    public function __construct(string $name, string $password, string $host);
+    
+    public function setFactory(UserFactory $factory);
 }

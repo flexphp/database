@@ -9,7 +9,8 @@
  */
 namespace FlexPHP\Database;
 
-use FlexPHP\Database\Validations\NameUserValidation;
+use FlexPHP\Database\Concretes\MySQLUserFactory;
+use FlexPHP\Database\Factories\UserFactory;
 
 class User implements UserInterface
 {
@@ -29,57 +30,34 @@ class User implements UserInterface
     private $host;
 
     /**
-     * @var array<string>
+     * @var UserFactory
      */
-    private $permissions;
+    private $factory;
 
-    /**
-     * @var string
-     */
-    private $driver;
-
-    public function __construct(string $name, string $password, string $host = '%', string $driver = 'mysql')
+    public function __construct(string $name, string $password, string $host = '%')
     {
-        $this->setName($name);
-        $this->setPassword($password);
-        $this->setHost($host);
-        $this->setDriver($driver);
-    }
-
-    public function setName(string $name): void
-    {
-        (new NameUserValidation($name))->validate();
-
         $this->name = $name;
-    }
-
-    public function setPassword(string $password): void
-    {
         $this->password = $password;
-    }
-
-    public function setHost(string $host): void
-    {
         $this->host = $host;
+
+        $this->setFactory(new MySQLUserFactory());
     }
 
-    public function setGrants(array $permissions, string $database = '*', string $table = '*'): void
+    public function setFactory(UserFactory $factory)
     {
-        $this->permissions = $permissions;
-    }
-
-    public function setDriver(string $driver): void
-    {
-        $this->driver = $driver;
+        $this->factory = $factory;
+        $this->factory->setName($this->name);
+        $this->factory->setPassword($this->password);
+        $this->factory->setHost($this->host);
     }
 
     public function asCreate(): string
     {
-        return \sprintf("CREATE USER '%s'@'%s' IDENTIFIED BY '%s';", $this->name, $this->host, $this->password);
+        return $this->factory->asCreate();
     }
 
     public function asDrop(): string
     {
-        return \sprintf("DROP USER '%s'@'%s';", $this->name, $this->host);
+        return $this->factory->asDrop();
     }
 }
