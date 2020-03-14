@@ -103,7 +103,7 @@ T
     {
         $name = 'jon';
         $password = 'p4sw00rd';
-        $database = 'foo';
+        $database = 'db';
 
         $user = new User($name, $password);
         $user->setGrant($permission, $database);
@@ -122,8 +122,8 @@ T
     {
         $name = 'jon';
         $password = 'p4sw00rd';
-        $database = 'foo';
-        $table = 'bar';
+        $database = 'db';
+        $table = 'table';
 
         $user = new User($name, $password);
         $user->setGrant($permission, $database, $table);
@@ -137,8 +137,8 @@ T
     {
         $name = 'jon';
         $password = 'p4sw00rd';
-        $database = 'foo';
-        $table = 'bar';
+        $database = 'db';
+        $table = 'table';
         $permissions = [
             'CREATE',
             'UPDATE',
@@ -194,6 +194,100 @@ DROP USER $name;
 GO
 T
 , $user->asDrop());
+    }
+
+    /**
+     * @dataProvider getPermissionValid
+     *
+     * @param mixed $permission
+     */
+    public function testItUserSqlSrvGrantOptionOnAll($permission): void
+    {
+        $name = 'jon';
+        $password = 'p4sw00rd';
+        $mappingPermission = $this->getMappingPermission($permission);
+
+        $user = new User($name, $password);
+        $user->setFactory(new SQLSrvUserFactory());
+        $user->setGrant($permission);
+        $this->assertEquals(<<<T
+GRANT $mappingPermission TO $name;
+GO
+T
+, $user->asPrivileges());
+    }
+
+    /**
+     * @dataProvider getPermissionValid
+     *
+     * @param mixed $permission
+     */
+    public function testItUserSqlSrvGrantOptionOnDatabase($permission): void
+    {
+        $name = 'jon';
+        $password = 'p4sw00rd';
+        $database = 'db';
+        $mappingPermission = $this->getMappingPermission($permission);
+
+        $user = new User($name, $password);
+        $user->setFactory(new SQLSrvUserFactory());
+        $user->setGrant($permission, $database);
+        $this->assertEquals(<<<T
+GRANT $mappingPermission ON $database TO $name;
+GO
+T
+, $user->asPrivileges());
+    }
+
+    /**
+     * @dataProvider getPermissionValid
+     *
+     * @param mixed $permission
+     */
+    public function testItUserSqlSrvGrantOptionOnTable($permission): void
+    {
+        $name = 'jon';
+        $password = 'p4sw00rd';
+        $database = 'db';
+        $table = 'table';
+        $mappingPermission = $this->getMappingPermission($permission);
+
+        $user = new User($name, $password);
+        $user->setFactory(new SQLSrvUserFactory());
+        $user->setGrant($permission, $database, $table);
+        $this->assertEquals(<<<T
+GRANT $mappingPermission ON $database.$table TO $name;
+GO
+T
+, $user->asPrivileges());
+    }
+
+    public function testItUserSqlSrvGrantOptionsMultiple(): void
+    {
+        $name = 'jon';
+        $password = 'p4sw00rd';
+        $database = 'db';
+        $table = 'table';
+        $permissions = [
+            'CREATE',
+            'UPDATE',
+        ];
+
+        $user = new User($name, $password);
+        $user->setFactory(new SQLSrvUserFactory());
+        $user->setGrants($permissions, $database, $table);
+        $this->assertEquals(<<<T
+GRANT CREATE ON $database.$table TO $name;
+GO
+GRANT UPDATE ON $database.$table TO $name;
+GO
+T
+, $user->asPrivileges());
+    }
+
+    public function getMappingPermission(string $permission): string
+    {
+        return SQLSrvUserFactory::MAPPING_PERMISSION[$permission];
     }
 
     public function getNameInvalid(): array

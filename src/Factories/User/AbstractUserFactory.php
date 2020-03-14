@@ -63,4 +63,6 @@ abstract class AbstractUserFactory implements UserFactoryInterface
     abstract public function asCreate(): string;
 
     abstract public function asDrop(): string;
+
+    abstract public function asPrivileges(): string;
 }

@@ -9,10 +9,19 @@
  */
 namespace FlexPHP\Database\Factories\User;
 
-use FlexPHP\Database\Factories\User\AbstractUserFactory;
-
 class SQLSrvUserFactory extends AbstractUserFactory
 {
+    public const MAPPING_PERMISSION = [
+        'ALL PRIVILEGES' => 'ALL',
+        'CREATE' => 'CREATE',
+        'DROP' => 'CONTROL',
+        'DELETE' => 'DELETE',
+        'INSERT' => 'INSERT',
+        'SELECT' => 'SELECT',
+        'UPDATE' => 'UPDATE',
+        'GRANT OPTION' => 'GRANT',
+    ];
+
     public function asCreate(): string
     {
         return \sprintf(<<<T
@@ -33,8 +42,85 @@ T, $this->name);
 
     public function asPrivileges(): string
     {
-        return \sprintf(<<<T
-%s GO
-T, $this->name);
+        $privileges = [];
+
+        foreach ($this->permissions as $permission) {
+            $perm = $this->getPermission($permission['permission']);
+            $database = $this->getDatabase($permission['database']);
+            $table = $this->getTable($permission['table']);
+            $scope = $this->getScope($database, $table);
+
+            $privileges[] = empty($scope)
+                ? $this->getTemplate($perm)
+                : $this->getTemplateScope($perm, $scope);
+        }
+
+        return \implode("\n", $privileges);
     }
+
+    private function getPermission(string $permission): string
+    {
+        return $this::MAPPING_PERMISSION[$permission] ?? '';
+    }
+
+    private function getDatabase(string $database): string
+    {
+        if (empty($database) || $database === '*') {
+            return '';
+        }
+
+        return $database;
+    }
+
+    private function getTable(string $table): string
+    {
+        if (empty($table) || $table === '*') {
+            return '';
+        }
+
+        return $table;
+    }
+
+    private function getScope(string $database, string $table): string
+    {
+        $scope = '';
+
+        if (!empty($database)) {
+            $scope .= $database;
+        }
+
+        if (!empty($table)) {
+            $scope .= '.' . $table;
+        }
+
+        if (!empty($scope)) {
+            $scope = 'ON ' . $scope;
+        }
+
+        return $scope;
+    }
+
+    private function getTemplate(string $permission): string
+    {
+        return \sprintf(<<<T
+GRANT %s TO %s;
+GO
+T,
+            $permission,
+            $this->name
+        );
+    }
+
+    private function getTemplateScope(string $permission, string $scope)
+    {
+        return \sprintf(<<<T
+GRANT %s %s TO %s;
+GO
+T,
+            $permission,
+            $scope,
+            $this->name
+        );
+    }
+
 }
