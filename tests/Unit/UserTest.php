@@ -17,8 +17,6 @@ class UserTest extends TestCase
 {
     /**
      * @dataProvider getNameInvalid
-     *
-     * @param mixed $name
      */
     public function testItUserMySqlCreateWithNameInvalidThrownException($name): void
     {
@@ -78,8 +76,6 @@ T
 
     /**
      * @dataProvider getPermissionValid
-     *
-     * @param mixed $permission
      */
     public function testItUserMySqlGrantOptionOnAll($permission): void
     {
@@ -96,8 +92,6 @@ T
 
     /**
      * @dataProvider getPermissionValid
-     *
-     * @param mixed $permission
      */
     public function testItUserMySqlGrantOptionOnDatabase($permission): void
     {
@@ -115,8 +109,6 @@ T
 
     /**
      * @dataProvider getPermissionValid
-     *
-     * @param mixed $permission
      */
     public function testItUserMySqlGrantOptionOnTable($permission): void
     {
@@ -155,8 +147,6 @@ T
 
     /**
      * @dataProvider getNameInvalid
-     *
-     * @param mixed $name
      */
     public function testItUserSqlSrvCreateWithNameInvalidThrownException($name): void
     {
@@ -198,8 +188,6 @@ T
 
     /**
      * @dataProvider getPermissionValid
-     *
-     * @param mixed $permission
      */
     public function testItUserSqlSrvGrantOptionOnAll($permission): void
     {
@@ -219,8 +207,6 @@ T
 
     /**
      * @dataProvider getPermissionValid
-     *
-     * @param mixed $permission
      */
     public function testItUserSqlSrvGrantOptionOnDatabase($permission): void
     {
@@ -241,8 +227,6 @@ T
 
     /**
      * @dataProvider getPermissionValid
-     *
-     * @param mixed $permission
      */
     public function testItUserSqlSrvGrantOptionOnTable($permission): void
     {

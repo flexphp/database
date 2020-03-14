@@ -105,22 +105,14 @@ T, $this->name);
         return \sprintf(<<<T
 GRANT %s TO %s;
 GO
-T,
-            $permission,
-            $this->name
-        );
+T, $permission, $this->name);
     }
 
-    private function getTemplateScope(string $permission, string $scope)
+    private function getTemplateScope(string $permission, string $scope): string
     {
         return \sprintf(<<<T
 GRANT %s %s TO %s;
 GO
-T,
-            $permission,
-            $scope,
-            $this->name
-        );
+T, $permission, $scope, $this->name);
     }
-
 }
