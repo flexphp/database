@@ -9,22 +9,12 @@
  */
 namespace FlexPHP\Database\Tests;
 
-use FlexPHP\Database\Exception\UserDatabaseException;
 use FlexPHP\Database\Factories\User\SQLSrvUserFactory;
 use FlexPHP\Database\User;
 
 class UserTest extends TestCase
 {
-    /**
-     * @dataProvider getNameInvalid
-     */
-    public function testItUserMySqlCreateWithNameInvalidThrownException($name): void
-    {
-        $this->expectException(UserDatabaseException::class);
-        (new User($name, 'password'))->asCreate();
-    }
-
-    public function testItUserMySqlCreateWithDefaultHost(): void
+    public function testItUserMySqlCreate(): void
     {
         $name = 'jon';
         $password = 'p4sw00rd';
@@ -36,20 +26,7 @@ T
 , $user->asCreate());
     }
 
-    public function testItUserCreateWithCustomHost(): void
-    {
-        $name = 'jon';
-        $password = 'p4sw00rd';
-        $host = 'custom.host';
-
-        $user = new User($name, $password, $host);
-        $this->assertEquals(<<<T
-CREATE USER '$name'@'$host' IDENTIFIED BY '$password';
-T
-, $user->asCreate());
-    }
-
-    public function testItUserMySqlDropWithDefaultHost(): void
+    public function testItUserMySqlDrop(): void
     {
         $name = 'jon';
         $password = 'p4sw00rd';
@@ -61,56 +38,7 @@ T
 , $user->asDrop());
     }
 
-    public function testItUserMySqlDropWithCustomHost(): void
-    {
-        $name = 'jon';
-        $password = 'p4sw00rd';
-        $host = 'custom.host';
-
-        $user = new User($name, $password, $host);
-        $this->assertEquals(<<<T
-DROP USER '$name'@'$host';
-T
-, $user->asDrop());
-    }
-
-    /**
-     * @dataProvider getPermissionValid
-     */
-    public function testItUserMySqlGrantOptionOnAll($permission): void
-    {
-        $name = 'jon';
-        $password = 'p4sw00rd';
-
-        $user = new User($name, $password);
-        $user->setGrant($permission);
-        $this->assertEquals(<<<T
-GRANT $permission ON *.* TO '$name'@'%';
-T
-, $user->asPrivileges());
-    }
-
-    /**
-     * @dataProvider getPermissionValid
-     */
-    public function testItUserMySqlGrantOptionOnDatabase($permission): void
-    {
-        $name = 'jon';
-        $password = 'p4sw00rd';
-        $database = 'db';
-
-        $user = new User($name, $password);
-        $user->setGrant($permission, $database);
-        $this->assertEquals(<<<T
-GRANT $permission ON $database.* TO '$name'@'%';
-T
-, $user->asPrivileges());
-    }
-
-    /**
-     * @dataProvider getPermissionValid
-     */
-    public function testItUserMySqlGrantOptionOnTable($permission): void
+    public function testItUserMySqlGrants(): void
     {
         $name = 'jon';
         $password = 'p4sw00rd';
@@ -118,45 +46,14 @@ T
         $table = 'table';
 
         $user = new User($name, $password);
-        $user->setGrant($permission, $database, $table);
-        $this->assertEquals(<<<T
-GRANT $permission ON $database.$table TO '$name'@'%';
-T
-, $user->asPrivileges());
-    }
-
-    public function testItUserMySqlGrantOptionsMultiple(): void
-    {
-        $name = 'jon';
-        $password = 'p4sw00rd';
-        $database = 'db';
-        $table = 'table';
-        $permissions = [
-            'CREATE',
-            'UPDATE',
-        ];
-
-        $user = new User($name, $password);
-        $user->setGrants($permissions, $database, $table);
+        $user->setGrants(['CREATE'], $database, $table);
         $this->assertEquals(<<<T
 GRANT CREATE ON $database.$table TO '$name'@'%';
-GRANT UPDATE ON $database.$table TO '$name'@'%';
 T
 , $user->asPrivileges());
     }
 
-    /**
-     * @dataProvider getNameInvalid
-     */
-    public function testItUserSqlSrvCreateWithNameInvalidThrownException($name): void
-    {
-        $this->expectException(UserDatabaseException::class);
-        $user = new User($name, 'password');
-        $user->setFactory(new SQLSrvUserFactory());
-        $user->asCreate();
-    }
-
-    public function testItUserSqlSrvCreateWithDefaultHost(): void
+    public function testItUserSqlSrvCreate(): void
     {
         $name = 'jon';
         $password = 'p4sw00rd';
@@ -186,112 +83,21 @@ T
 , $user->asDrop());
     }
 
-    /**
-     * @dataProvider getPermissionValid
-     */
-    public function testItUserSqlSrvGrantOptionOnAll($permission): void
-    {
-        $name = 'jon';
-        $password = 'p4sw00rd';
-        $mappingPermission = $this->getMappingPermission($permission);
-
-        $user = new User($name, $password);
-        $user->setFactory(new SQLSrvUserFactory());
-        $user->setGrant($permission);
-        $this->assertEquals(<<<T
-GRANT $mappingPermission TO $name;
-GO
-T
-, $user->asPrivileges());
-    }
-
-    /**
-     * @dataProvider getPermissionValid
-     */
-    public function testItUserSqlSrvGrantOptionOnDatabase($permission): void
-    {
-        $name = 'jon';
-        $password = 'p4sw00rd';
-        $database = 'db';
-        $mappingPermission = $this->getMappingPermission($permission);
-
-        $user = new User($name, $password);
-        $user->setFactory(new SQLSrvUserFactory());
-        $user->setGrant($permission, $database);
-        $this->assertEquals(<<<T
-GRANT $mappingPermission ON $database TO $name;
-GO
-T
-, $user->asPrivileges());
-    }
-
-    /**
-     * @dataProvider getPermissionValid
-     */
-    public function testItUserSqlSrvGrantOptionOnTable($permission): void
+    public function testItUserSqlSrvGrants(): void
     {
         $name = 'jon';
         $password = 'p4sw00rd';
         $database = 'db';
         $table = 'table';
-        $mappingPermission = $this->getMappingPermission($permission);
+        $permission = 'CREATE';
 
         $user = new User($name, $password);
         $user->setFactory(new SQLSrvUserFactory());
-        $user->setGrant($permission, $database, $table);
+        $user->setGrants(['CREATE'], $database, $table);
         $this->assertEquals(<<<T
-GRANT $mappingPermission ON $database.$table TO $name;
+GRANT $permission ON $database.$table TO $name;
 GO
 T
 , $user->asPrivileges());
-    }
-
-    public function testItUserSqlSrvGrantOptionsMultiple(): void
-    {
-        $name = 'jon';
-        $password = 'p4sw00rd';
-        $database = 'db';
-        $table = 'table';
-        $permissions = [
-            'CREATE',
-            'UPDATE',
-        ];
-
-        $user = new User($name, $password);
-        $user->setFactory(new SQLSrvUserFactory());
-        $user->setGrants($permissions, $database, $table);
-        $this->assertEquals(<<<T
-GRANT CREATE ON $database.$table TO $name;
-GO
-GRANT UPDATE ON $database.$table TO $name;
-GO
-T
-, $user->asPrivileges());
-    }
-
-    public function getMappingPermission(string $permission): string
-    {
-        return SQLSrvUserFactory::MAPPING_PERMISSION[$permission];
-    }
-
-    public function getNameInvalid(): array
-    {
-        return [
-            ['jon doe'],
-        ];
-    }
-
-    public function getPermissionValid(): array
-    {
-        return [
-            ['ALL PRIVILEGES'],
-            ['CREATE'],
-            ['DROP'],
-            ['DELETE'],
-            ['INSERT'],
-            ['SELECT'],
-            ['UPDATE'],
-            ['GRANT OPTION'],
-        ];
     }
 }
