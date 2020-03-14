@@ -9,8 +9,6 @@
  */
 namespace FlexPHP\Database\Factories\User;
 
-use FlexPHP\Database\Factories\User\AbstractUserFactory;
-
 class MySQLUserFactory extends AbstractUserFactory
 {
     public function asCreate(): string
@@ -21,5 +19,23 @@ class MySQLUserFactory extends AbstractUserFactory
     public function asDrop(): string
     {
         return \sprintf("DROP USER '%s'@'%s';", $this->name, $this->host);
+    }
+
+    public function asPrivileges(): string
+    {
+        $privileges = [];
+
+        foreach ($this->permissions as $permission) {
+            $privileges[] = \sprintf(
+                "GRANT %s ON %s.%s TO '%s'@'%s';",
+                $permission['permission'],
+                $permission['database'],
+                $permission['table'],
+                $this->name,
+                $this->host
+            );
+        }
+
+        return \implode("\n", $privileges);
     }
 }

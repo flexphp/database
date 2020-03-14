@@ -30,9 +30,9 @@ abstract class AbstractUserFactory implements UserFactoryInterface
     protected $host;
 
     /**
-     * @var array<string>
+     * @var array<int, array>
      */
-    protected $permissions;
+    protected $permissions = [];
 
     public function setName(string $name): void
     {
@@ -51,10 +51,14 @@ abstract class AbstractUserFactory implements UserFactoryInterface
         $this->host = $host;
     }
 
-    // public function setGrants(array $permissions, string $database = '*', string $table = '*'): void
-    // {
-    // $this->permissions = $permissions;
-    // }
+    public function setGrant(string $permission, string $database = '*', string $table = '*'): void
+    {
+        $this->permissions[] = [
+            'database' => $database,
+            'table' => $table,
+            'permission' => $permission,
+        ];
+    }
 
     abstract public function asCreate(): string;
 

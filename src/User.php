@@ -30,7 +30,7 @@ class User implements UserInterface
     private $host;
 
     /**
-     * @var UserFactory
+     * @var UserFactoryInterface
      */
     private $factory;
 
@@ -46,18 +46,43 @@ class User implements UserInterface
     public function setFactory(UserFactoryInterface $factory): void
     {
         $this->factory = $factory;
-        $this->factory->setName($this->name);
-        $this->factory->setPassword($this->password);
-        $this->factory->setHost($this->host);
+    }
+
+    public function setGrant(string $permission, string $database = '*', string $table = '*'): void
+    {
+        $this->factory->setGrant($permission, $database, $table);
+    }
+
+    public function setGrants(array $permissions, string $database = '*', string $table = '*'): void
+    {
+        foreach ($permissions as $permission) {
+            $this->setGrant($permission, $database, $table);
+        }
     }
 
     public function asCreate(): string
     {
+        $this->factory->setName($this->name);
+        $this->factory->setPassword($this->password);
+        $this->factory->setHost($this->host);
+
         return $this->factory->asCreate();
     }
 
     public function asDrop(): string
     {
+        $this->factory->setName($this->name);
+        $this->factory->setPassword($this->password);
+        $this->factory->setHost($this->host);
+
         return $this->factory->asDrop();
+    }
+
+    public function asPrivileges(): string
+    {
+        $this->factory->setName($this->name);
+        $this->factory->setHost($this->host);
+
+        return $this->factory->asPrivileges();
     }
 }

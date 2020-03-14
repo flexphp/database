@@ -17,9 +17,11 @@ interface UserFactoryInterface
 
     public function setHost(string $host): void;
 
-    // public function setGrants(array $permissions, string $database, string $table): void;
+    public function setGrant(string $permission, string $database = '*', string $table = '*'): void;
 
     public function asCreate(): string;
 
     public function asDrop(): string;
+
+    public function asPrivileges(): string;
 }

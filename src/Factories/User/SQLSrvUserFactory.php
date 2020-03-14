@@ -30,4 +30,11 @@ DROP USER %s;
 GO
 T, $this->name);
     }
+
+    public function asPrivileges(): string
+    {
+        return \sprintf(<<<T
+%s GO
+T, $this->name);
+    }
 }

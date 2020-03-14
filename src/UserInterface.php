@@ -16,4 +16,14 @@ interface UserInterface
     public function __construct(string $name, string $password, string $host);
 
     public function setFactory(UserFactoryInterface $factory): void;
+
+    public function setGrant(string $permission, string $database = '*', string $table = '*'): void;
+
+    public function setGrants(array $permissions, string $database = '*', string $table = '*'): void;
+
+    public function asCreate(): string;
+
+    public function asDrop(): string;
+
+    public function asPrivileges(): string;
 }

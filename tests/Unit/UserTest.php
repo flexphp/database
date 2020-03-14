@@ -9,8 +9,8 @@
  */
 namespace FlexPHP\Database\Tests;
 
-use FlexPHP\Database\Factories\User\SQLSrvUserFactory;
 use FlexPHP\Database\Exception\UserDatabaseException;
+use FlexPHP\Database\Factories\User\SQLSrvUserFactory;
 use FlexPHP\Database\User;
 
 class UserTest extends TestCase
@@ -77,6 +77,83 @@ T
     }
 
     /**
+     * @dataProvider getPermissionValid
+     *
+     * @param mixed $permission
+     */
+    public function testItUserMySqlGrantOptionOnAll($permission): void
+    {
+        $name = 'jon';
+        $password = 'p4sw00rd';
+
+        $user = new User($name, $password);
+        $user->setGrant($permission);
+        $this->assertEquals(<<<T
+GRANT $permission ON *.* TO '$name'@'%';
+T
+, $user->asPrivileges());
+    }
+
+    /**
+     * @dataProvider getPermissionValid
+     *
+     * @param mixed $permission
+     */
+    public function testItUserMySqlGrantOptionOnDatabase($permission): void
+    {
+        $name = 'jon';
+        $password = 'p4sw00rd';
+        $database = 'foo';
+
+        $user = new User($name, $password);
+        $user->setGrant($permission, $database);
+        $this->assertEquals(<<<T
+GRANT $permission ON $database.* TO '$name'@'%';
+T
+, $user->asPrivileges());
+    }
+
+    /**
+     * @dataProvider getPermissionValid
+     *
+     * @param mixed $permission
+     */
+    public function testItUserMySqlGrantOptionOnTable($permission): void
+    {
+        $name = 'jon';
+        $password = 'p4sw00rd';
+        $database = 'foo';
+        $table = 'bar';
+
+        $user = new User($name, $password);
+        $user->setGrant($permission, $database, $table);
+        $this->assertEquals(<<<T
+GRANT $permission ON $database.$table TO '$name'@'%';
+T
+, $user->asPrivileges());
+    }
+
+    public function testItUserMySqlGrantOptionsMultiple(): void
+    {
+        $name = 'jon';
+        $password = 'p4sw00rd';
+        $database = 'foo';
+        $table = 'bar';
+        $permissions = [
+            'CREATE',
+            'UPDATE',
+        ];
+
+        $user = new User($name, $password);
+        $user->setGrants($permissions, $database, $table);
+        $this->assertEquals(<<<T
+GRANT CREATE ON $database.$table TO '$name'@'%';
+GRANT UPDATE ON $database.$table TO '$name'@'%';
+T
+, $user->asPrivileges());
+    }
+
+    /**
      * @dataProvider getNameInvalid
      *
      * @param mixed $name
@@ -123,6 +200,20 @@ T
     {
         return [
             ['jon doe'],
+        ];
+    }
+
+    public function getPermissionValid(): array
+    {
+        return [
+            ['ALL PRIVILEGES'],
+            ['CREATE'],
+            ['DROP'],
+            ['DELETE'],
+            ['INSERT'],
+            ['SELECT'],
+            ['UPDATE'],
+            ['GRANT OPTION'],
         ];
     }
 }
