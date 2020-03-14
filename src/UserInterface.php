@@ -9,11 +9,11 @@
  */
 namespace FlexPHP\Database;
 
-use FlexPHP\Database\Factories\UserFactory;
+use FlexPHP\Database\Interfaces\UserFactoryInterface;
 
 interface UserInterface
 {
     public function __construct(string $name, string $password, string $host);
 
-    public function setFactory(UserFactory $factory): void;
+    public function setFactory(UserFactoryInterface $factory): void;
 }

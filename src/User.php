@@ -9,8 +9,8 @@
  */
 namespace FlexPHP\Database;
 
-use FlexPHP\Database\Concretes\MySQLUserFactory;
-use FlexPHP\Database\Factories\UserFactory;
+use FlexPHP\Database\Factories\User\MySQLUserFactory;
+use FlexPHP\Database\Interfaces\UserFactoryInterface;
 
 class User implements UserInterface
 {
@@ -43,7 +43,7 @@ class User implements UserInterface
         $this->setFactory(new MySQLUserFactory());
     }
 
-    public function setFactory(UserFactory $factory): void
+    public function setFactory(UserFactoryInterface $factory): void
     {
         $this->factory = $factory;
         $this->factory->setName($this->name);

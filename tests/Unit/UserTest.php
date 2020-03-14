@@ -9,7 +9,7 @@
  */
 namespace FlexPHP\Database\Tests;
 
-use FlexPHP\Database\Concretes\SQLSrvUserFactory;
+use FlexPHP\Database\Factories\User\SQLSrvUserFactory;
 use FlexPHP\Database\Exception\UserDatabaseException;
 use FlexPHP\Database\User;
 

@@ -7,12 +7,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace FlexPHP\Database\Factories;
+namespace FlexPHP\Database\Factories\User;
 
 use FlexPHP\Database\Interfaces\UserFactoryInterface;
 use FlexPHP\Database\Validations\NameUserValidation;
 
-abstract class UserFactory implements UserFactoryInterface
+abstract class AbstractUserFactory implements UserFactoryInterface
 {
     /**
      * @var string

@@ -7,11 +7,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace FlexPHP\Database\Concretes;
+namespace FlexPHP\Database\Factories\User;
 
-use FlexPHP\Database\Factories\UserFactory;
+use FlexPHP\Database\Factories\User\AbstractUserFactory;
 
-class MySQLUserFactory extends UserFactory
+class MySQLUserFactory extends AbstractUserFactory
 {
     public function asCreate(): string
     {
