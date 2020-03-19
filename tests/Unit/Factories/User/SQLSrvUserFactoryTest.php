@@ -19,7 +19,7 @@ class SQLSrvUserFactoryTest extends TestCase
     /**
      * @dataProvider getNameInvalid
      */
-    public function testItUserSqlSrvCreateWithNameInvalidThrownException($name): void
+    public function testItSrvCreateWithNameInvalidThrownException($name): void
     {
         $this->expectException(UserDatabaseException::class);
         $user = new User($name, 'password');
@@ -27,7 +27,7 @@ class SQLSrvUserFactoryTest extends TestCase
         $user->asCreate();
     }
 
-    public function testItUserSqlSrvCreate(): void
+    public function testItSrvCreate(): void
     {
         $name = 'jon';
         $password = 'p4sw00rd';
@@ -43,7 +43,7 @@ T
 , $user->asCreate());
     }
 
-    public function testItUserSqlSrvDrop(): void
+    public function testItSrvDrop(): void
     {
         $name = 'jon';
         $password = 'p4sw00rd';
@@ -60,7 +60,7 @@ T
     /**
      * @dataProvider getPermissionValid
      */
-    public function testItUserSqlSrvGrantOptionOnAll($permission): void
+    public function testItSrvGrantOptionOnAll($permission): void
     {
         $name = 'jon';
         $password = 'p4sw00rd';
@@ -79,7 +79,7 @@ T
     /**
      * @dataProvider getPermissionValid
      */
-    public function testItUserSqlSrvGrantOptionOnDatabase($permission): void
+    public function testItSrvGrantOptionOnDatabase($permission): void
     {
         $name = 'jon';
         $password = 'p4sw00rd';
@@ -99,7 +99,7 @@ T
     /**
      * @dataProvider getPermissionValid
      */
-    public function testItUserSqlSrvGrantOptionOnTable($permission): void
+    public function testItSrvGrantOptionOnTable($permission): void
     {
         $name = 'jon';
         $password = 'p4sw00rd';
@@ -117,7 +117,7 @@ T
 , $user->asPrivileges());
     }
 
-    public function testItUserSqlSrvGrantOptionsMultiple(): void
+    public function testItSrvGrantOptionsMultiple(): void
     {
         $name = 'jon';
         $password = 'p4sw00rd';
