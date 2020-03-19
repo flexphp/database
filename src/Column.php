@@ -9,9 +9,8 @@
  */
 namespace FlexPHP\Database;
 
-use Doctrine\DBAL\Schema\Column as DBALColumn;
 use Doctrine\DBAL\Types\Type as DBALType;
-use FlexPHP\Database\Factories\User\SQLCreator;
+use FlexPHP\Database\Factories\SQLCreator;
 
 class Column implements ColumnInterface
 {
@@ -21,7 +20,7 @@ class Column implements ColumnInterface
     private $name;
 
     /**
-     * @var array<string, string>
+     * @var array<int|string, mixed>
      */
     private $options;
 

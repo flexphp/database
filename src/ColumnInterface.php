@@ -13,12 +13,6 @@ interface ColumnInterface
 {
     public function __construct(string $name, string $dataType, array $options);
 
-    // public function setName(string $name): void;
-
-    // public function setDataType(string $dataType): void;
-
-    // public function setOptions(array $options): void;
-
     public function setPlatform(string $platform): void;
 
     public function asAdd(): string;
