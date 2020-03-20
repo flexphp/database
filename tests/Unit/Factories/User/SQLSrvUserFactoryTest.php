@@ -24,7 +24,7 @@ class SQLSrvUserFactoryTest extends TestCase
         $this->expectException(UserDatabaseException::class);
         $user = new User($name, 'password');
         $user->setFactory(new SQLSrvUserFactory());
-        $user->asCreate();
+        $user->toSqlCreate();
     }
 
     public function testItSrvCreate(): void
@@ -40,7 +40,7 @@ GO
 CREATE USER $name FOR LOGIN $name;
 GO
 T
-, $user->asCreate());
+, $user->toSqlCreate());
     }
 
     public function testItSrvDrop(): void
@@ -54,7 +54,7 @@ T
 DROP USER $name;
 GO
 T
-, $user->asDrop());
+, $user->toSqlDrop());
     }
 
     /**
@@ -73,7 +73,7 @@ T
 GRANT $mappingPermission TO $name;
 GO
 T
-, $user->asPrivileges());
+, $user->toSqlPrivileges());
     }
 
     /**
@@ -93,7 +93,7 @@ T
 GRANT $mappingPermission ON $database TO $name;
 GO
 T
-, $user->asPrivileges());
+, $user->toSqlPrivileges());
     }
 
     /**
@@ -114,7 +114,7 @@ T
 GRANT $mappingPermission ON $database.$table TO $name;
 GO
 T
-, $user->asPrivileges());
+, $user->toSqlPrivileges());
     }
 
     public function testItSrvGrantOptionsMultiple(): void
@@ -137,7 +137,7 @@ GO
 GRANT UPDATE ON $database.$table TO $name;
 GO
 T
-, $user->asPrivileges());
+, $user->toSqlPrivileges());
     }
 
     public function getMappingPermission(string $permission): string

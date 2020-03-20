@@ -18,8 +18,4 @@ interface ColumnInterface
     public function asAdd(): string;
 
     // public function asDrop(): string;
-
-    // public function asAddIntable(string $table): string;
-
-    // public function asDropIntable(string $table): string;
 }

@@ -18,11 +18,13 @@ class MySQLUserFactoryTest extends TestCase
 {
     /**
      * @dataProvider getNameInvalid
+     *
+     * @param mixed $name
      */
     public function testItCreateWithNameInvalidThrownException($name): void
     {
         $this->expectException(UserDatabaseException::class);
-        (new User($name, 'password'))->asCreate();
+        (new User($name, 'password'))->toSqlCreate();
     }
 
     public function testItCreateWithDefaultHost(): void
@@ -34,7 +36,7 @@ class MySQLUserFactoryTest extends TestCase
         $this->assertEquals(<<<T
 CREATE USER '$name'@'%' IDENTIFIED BY '$password';
 T
-, $user->asCreate());
+, $user->toSqlCreate());
     }
 
     public function testItUserCreateWithCustomHost(): void
@@ -47,7 +49,7 @@ T
         $this->assertEquals(<<<T
 CREATE USER '$name'@'$host' IDENTIFIED BY '$password';
 T
-, $user->asCreate());
+, $user->toSqlCreate());
     }
 
     public function testItDropWithDefaultHost(): void
@@ -59,7 +61,7 @@ T
         $this->assertEquals(<<<T
 DROP USER '$name'@'%';
 T
-, $user->asDrop());
+, $user->toSqlDrop());
     }
 
     public function testItDropWithCustomHost(): void
@@ -72,11 +74,13 @@ T
         $this->assertEquals(<<<T
 DROP USER '$name'@'$host';
 T
-, $user->asDrop());
+, $user->toSqlDrop());
     }
 
     /**
      * @dataProvider getPermissionValid
+     *
+     * @param mixed $permission
      */
     public function testItGrantOptionOnAll($permission): void
     {
@@ -88,11 +92,13 @@ T
         $this->assertEquals(<<<T
 GRANT $permission ON *.* TO '$name'@'%';
 T
-, $user->asPrivileges());
+, $user->toSqlPrivileges());
     }
 
     /**
      * @dataProvider getPermissionValid
+     *
+     * @param mixed $permission
      */
     public function testItGrantOptionOnDatabase($permission): void
     {
@@ -105,11 +111,13 @@ T
         $this->assertEquals(<<<T
 GRANT $permission ON $database.* TO '$name'@'%';
 T
-, $user->asPrivileges());
+, $user->toSqlPrivileges());
     }
 
     /**
      * @dataProvider getPermissionValid
+     *
+     * @param mixed $permission
      */
     public function testItGrantOptionOnTable($permission): void
     {
@@ -123,7 +131,7 @@ T
         $this->assertEquals(<<<T
 GRANT $permission ON $database.$table TO '$name'@'%';
 T
-, $user->asPrivileges());
+, $user->toSqlPrivileges());
     }
 
     public function testItGrantOptionsMultiple(): void
@@ -143,131 +151,7 @@ T
 GRANT CREATE ON $database.$table TO '$name'@'%';
 GRANT UPDATE ON $database.$table TO '$name'@'%';
 T
-, $user->asPrivileges());
-    }
-
-    /**
-     * @dataProvider getNameInvalid
-     */
-    public function testItUserSqlSrvCreateWithNameInvalidThrownException($name): void
-    {
-        $this->expectException(UserDatabaseException::class);
-        $user = new User($name, 'password');
-        $user->setFactory(new SQLSrvUserFactory());
-        $user->asCreate();
-    }
-
-    public function testItUserSqlSrvCreateWithDefaultHost(): void
-    {
-        $name = 'jon';
-        $password = 'p4sw00rd';
-
-        $user = new User($name, $password);
-        $user->setFactory(new SQLSrvUserFactory());
-        $this->assertEquals(<<<T
-CREATE LOGIN $name WITH PASSWORD = '$password';
-GO
-CREATE USER $name FOR LOGIN $name;
-GO
-T
-, $user->asCreate());
-    }
-
-    public function testItUserSqlSrvDrop(): void
-    {
-        $name = 'jon';
-        $password = 'p4sw00rd';
-
-        $user = new User($name, $password);
-        $user->setFactory(new SQLSrvUserFactory());
-        $this->assertEquals(<<<T
-DROP USER $name;
-GO
-T
-, $user->asDrop());
-    }
-
-    /**
-     * @dataProvider getPermissionValid
-     */
-    public function testItUserSqlSrvGrantOptionOnAll($permission): void
-    {
-        $name = 'jon';
-        $password = 'p4sw00rd';
-        $mappingPermission = $this->getMappingPermission($permission);
-
-        $user = new User($name, $password);
-        $user->setFactory(new SQLSrvUserFactory());
-        $user->setGrant($permission);
-        $this->assertEquals(<<<T
-GRANT $mappingPermission TO $name;
-GO
-T
-, $user->asPrivileges());
-    }
-
-    /**
-     * @dataProvider getPermissionValid
-     */
-    public function testItUserSqlSrvGrantOptionOnDatabase($permission): void
-    {
-        $name = 'jon';
-        $password = 'p4sw00rd';
-        $database = 'db';
-        $mappingPermission = $this->getMappingPermission($permission);
-
-        $user = new User($name, $password);
-        $user->setFactory(new SQLSrvUserFactory());
-        $user->setGrant($permission, $database);
-        $this->assertEquals(<<<T
-GRANT $mappingPermission ON $database TO $name;
-GO
-T
-, $user->asPrivileges());
-    }
-
-    /**
-     * @dataProvider getPermissionValid
-     */
-    public function testItUserSqlSrvGrantOptionOnTable($permission): void
-    {
-        $name = 'jon';
-        $password = 'p4sw00rd';
-        $database = 'db';
-        $table = 'table';
-        $mappingPermission = $this->getMappingPermission($permission);
-
-        $user = new User($name, $password);
-        $user->setFactory(new SQLSrvUserFactory());
-        $user->setGrant($permission, $database, $table);
-        $this->assertEquals(<<<T
-GRANT $mappingPermission ON $database.$table TO $name;
-GO
-T
-, $user->asPrivileges());
-    }
-
-    public function testItUserSqlSrvGrantOptionsMultiple(): void
-    {
-        $name = 'jon';
-        $password = 'p4sw00rd';
-        $database = 'db';
-        $table = 'table';
-        $permissions = [
-            'CREATE',
-            'UPDATE',
-        ];
-
-        $user = new User($name, $password);
-        $user->setFactory(new SQLSrvUserFactory());
-        $user->setGrants($permissions, $database, $table);
-        $this->assertEquals(<<<T
-GRANT CREATE ON $database.$table TO $name;
-GO
-GRANT UPDATE ON $database.$table TO $name;
-GO
-T
-, $user->asPrivileges());
+, $user->toSqlPrivileges());
     }
 
     public function getMappingPermission(string $permission): string

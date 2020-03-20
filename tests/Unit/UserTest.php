@@ -23,7 +23,7 @@ class UserTest extends TestCase
         $this->assertEquals(<<<T
 CREATE USER '$name'@'%' IDENTIFIED BY '$password';
 T
-, $user->asCreate());
+, $user->toSqlCreate());
     }
 
     public function testItUserMySqlDrop(): void
@@ -35,7 +35,7 @@ T
         $this->assertEquals(<<<T
 DROP USER '$name'@'%';
 T
-, $user->asDrop());
+, $user->toSqlDrop());
     }
 
     public function testItUserMySqlGrants(): void
@@ -50,7 +50,7 @@ T
         $this->assertEquals(<<<T
 GRANT CREATE ON $database.$table TO '$name'@'%';
 T
-, $user->asPrivileges());
+, $user->toSqlPrivileges());
     }
 
     public function testItUserSqlSrvCreate(): void
@@ -66,7 +66,7 @@ GO
 CREATE USER $name FOR LOGIN $name;
 GO
 T
-, $user->asCreate());
+, $user->toSqlCreate());
     }
 
     public function testItUserSqlSrvDrop(): void
@@ -80,7 +80,7 @@ T
 DROP USER $name;
 GO
 T
-, $user->asDrop());
+, $user->toSqlDrop());
     }
 
     public function testItUserSqlSrvGrants(): void
@@ -98,6 +98,6 @@ T
 GRANT $permission ON $database.$table TO $name;
 GO
 T
-, $user->asPrivileges());
+, $user->toSqlPrivileges());
     }
 }

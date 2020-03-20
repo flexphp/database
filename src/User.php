@@ -9,7 +9,6 @@
  */
 namespace FlexPHP\Database;
 
-use FlexPHP\Database\Factories\User\MySQLUserFactory;
 use FlexPHP\Database\Interfaces\UserFactoryInterface;
 
 class User implements UserInterface
@@ -30,27 +29,30 @@ class User implements UserInterface
     private $host;
 
     /**
-     * @var UserFactoryInterface
+     * @var array<int, string>
      */
-    private $factory;
+    private $grants;
+
+    /**
+     * @var string
+     */
+    private $platform = 'MySQL';
 
     public function __construct(string $name, string $password, string $host = '%')
     {
         $this->name = $name;
         $this->password = $password;
         $this->host = $host;
-
-        $this->setFactory(new MySQLUserFactory());
     }
 
-    public function setFactory(UserFactoryInterface $factory): void
+    public function setPlatform(string $platform): void
     {
-        $this->factory = $factory;
+        $this->platform = $platform;
     }
 
     public function setGrant(string $permission, string $database = '*', string $table = '*'): void
     {
-        $this->factory->setGrant($permission, $database, $table);
+        $this->grants[] = [$permission, $database, $table];
     }
 
     public function setGrants(array $permissions, string $database = '*', string $table = '*'): void
@@ -60,29 +62,43 @@ class User implements UserInterface
         }
     }
 
-    public function asCreate(): string
+    public function toSqlCreate(): string
     {
-        $this->factory->setName($this->name);
-        $this->factory->setPassword($this->password);
-        $this->factory->setHost($this->host);
+        $factory = $this->getFactory();
+        $factory->setName($this->name);
+        $factory->setPassword($this->password);
+        $factory->setHost($this->host);
 
-        return $this->factory->asCreate();
+        return $factory->asCreate();
     }
 
-    public function asDrop(): string
+    public function toSqlDrop(): string
     {
-        $this->factory->setName($this->name);
-        $this->factory->setPassword($this->password);
-        $this->factory->setHost($this->host);
+        $factory = $this->getFactory();
+        $factory->setName($this->name);
+        $factory->setPassword($this->password);
+        $factory->setHost($this->host);
 
-        return $this->factory->asDrop();
+        return $factory->asDrop();
     }
 
-    public function asPrivileges(): string
+    public function toSqlPrivileges(): string
     {
-        $this->factory->setName($this->name);
-        $this->factory->setHost($this->host);
+        $factory = $this->getFactory();
+        $factory->setName($this->name);
+        $factory->setHost($this->host);
 
-        return $this->factory->asPrivileges();
+        foreach ($this->grants as $grant) {
+            $factory->setGrant(...$grant);
+        }
+
+        return $factory->asPrivileges();
+    }
+
+    private function getFactory(): UserFactoryInterface
+    {
+        $fqdn = \sprintf('FlexPHP\Database\Factories\User\%sUserFactory', $this->platform);
+
+        return new $fqdn();
     }
 }
