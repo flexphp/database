@@ -9,17 +9,16 @@
  */
 namespace FlexPHP\Database;
 
-use Doctrine\DBAL\Types\Type as DBALType;
-use FlexPHP\Schema\SchemaAttribute;
+use FlexPHP\Schema\SchemaAttributeInterface;
 
 class Column implements ColumnInterface
 {
     /**
-     * @var SchemaAttribute
+     * @var SchemaAttributeInterface
      */
     private $schemaAttribute;
 
-    public function __construct(SchemaAttribute $schemaAttribute)
+    public function __construct(SchemaAttributeInterface $schemaAttribute)
     {
         $this->schemaAttribute = $schemaAttribute;
     }

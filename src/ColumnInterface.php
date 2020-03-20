@@ -9,11 +9,11 @@
  */
 namespace FlexPHP\Database;
 
-use FlexPHP\Schema\SchemaAttribute;
+use FlexPHP\Schema\SchemaAttributeInterface;
 
 interface ColumnInterface
 {
-    public function __construct(SchemaAttribute $schemaAttribute);
+    public function __construct(SchemaAttributeInterface $schemaAttribute);
 
     public function getName(): string;
 
