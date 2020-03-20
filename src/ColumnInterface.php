@@ -9,13 +9,15 @@
  */
 namespace FlexPHP\Database;
 
+use FlexPHP\Schema\SchemaAttribute;
+
 interface ColumnInterface
 {
-    public function __construct(string $name, string $dataType, array $options);
+    public function __construct(SchemaAttribute $schemaAttribute);
 
-    public function setPlatform(string $platform): void;
+    public function getName(): string;
 
-    public function asAdd(): string;
+    public function getType(): string;
 
-    // public function asDrop(): string;
+    public function getOptions(): array;
 }

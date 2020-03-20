@@ -10,47 +10,42 @@
 namespace FlexPHP\Database;
 
 use Doctrine\DBAL\Types\Type as DBALType;
-use FlexPHP\Database\Factories\SQLCreator;
+use FlexPHP\Schema\SchemaAttribute;
 
 class Column implements ColumnInterface
 {
     /**
-     * @var string
+     * @var SchemaAttribute
      */
-    private $name;
+    private $schemaAttribute;
 
-    /**
-     * @var array<int|string, mixed>
-     */
-    private $options;
-
-    /**
-     * @var string
-     */
-    private $platform = 'MySQL';
-
-    /**
-     * @var array<string, string>
-     */
-    private $defaultOptions = [
-        'collation' => 'utf8mb4',
-    ];
-
-    public function __construct(string $name, string $dataType, array $options = [])
+    public function __construct(SchemaAttribute $schemaAttribute)
     {
-        $this->name = $name;
-        $this->options = \array_merge($this->defaultOptions, ['type' => DBALType::getType($dataType)], $options);
+        $this->schemaAttribute = $schemaAttribute;
     }
 
-    public function setPlatform(string $platform): void
+    public function getName(): string
     {
-        $this->$platform = $platform;
+        return $this->schemaAttribute->name();
     }
 
-    public function asAdd(): string
+    public function getType(): string
     {
-        $creator = new SQLCreator($this->platform);
+        return $this->schemaAttribute->dataType();
+    }
 
-        return $creator->getPlatform()->getColumnDeclarationSQL($this->name, $this->options);
+    public function getOptions(): array
+    {
+        return [
+            'length' => $this->schemaAttribute->maxLength(),
+            'notnull' => $this->schemaAttribute->isRequired(),
+            // 'autoincrement' => $this->schemaAttribute->name(),
+            'comment' => $this->schemaAttribute->name(),
+            // 'precision' => $this->schemaAttribute->name(),
+            // 'scale' => $this->schemaAttribute->name(),
+            // 'unsigned' => $this->schemaAttribute->name(),
+            // 'fixed' => $this->schemaAttribute->name(),
+            // 'default' => $this->schemaAttribute->name(),
+        ];
     }
 }
