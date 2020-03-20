@@ -23,7 +23,7 @@ class SQLSrvUserFactoryTest extends TestCase
     {
         $this->expectException(UserDatabaseException::class);
         $user = new User($name, 'password');
-        $user->setFactory(new SQLSrvUserFactory());
+        $user->setPlatform('SQLSrv');
         $user->toSqlCreate();
     }
 
@@ -33,7 +33,7 @@ class SQLSrvUserFactoryTest extends TestCase
         $password = 'p4sw00rd';
 
         $user = new User($name, $password);
-        $user->setFactory(new SQLSrvUserFactory());
+        $user->setPlatform('SQLSrv');
         $this->assertEquals(<<<T
 CREATE LOGIN $name WITH PASSWORD = '$password';
 GO
@@ -49,7 +49,7 @@ T
         $password = 'p4sw00rd';
 
         $user = new User($name, $password);
-        $user->setFactory(new SQLSrvUserFactory());
+        $user->setPlatform('SQLSrv');
         $this->assertEquals(<<<T
 DROP USER $name;
 GO
@@ -67,7 +67,7 @@ T
         $mappingPermission = $this->getMappingPermission($permission);
 
         $user = new User($name, $password);
-        $user->setFactory(new SQLSrvUserFactory());
+        $user->setPlatform('SQLSrv');
         $user->setGrant($permission);
         $this->assertEquals(<<<T
 GRANT $mappingPermission TO $name;
@@ -87,7 +87,7 @@ T
         $mappingPermission = $this->getMappingPermission($permission);
 
         $user = new User($name, $password);
-        $user->setFactory(new SQLSrvUserFactory());
+        $user->setPlatform('SQLSrv');
         $user->setGrant($permission, $database);
         $this->assertEquals(<<<T
 GRANT $mappingPermission ON $database TO $name;
@@ -108,7 +108,7 @@ T
         $mappingPermission = $this->getMappingPermission($permission);
 
         $user = new User($name, $password);
-        $user->setFactory(new SQLSrvUserFactory());
+        $user->setPlatform('SQLSrv');
         $user->setGrant($permission, $database, $table);
         $this->assertEquals(<<<T
 GRANT $mappingPermission ON $database.$table TO $name;
@@ -129,7 +129,7 @@ T
         ];
 
         $user = new User($name, $password);
-        $user->setFactory(new SQLSrvUserFactory());
+        $user->setPlatform('SQLSrv');
         $user->setGrants($permissions, $database, $table);
         $this->assertEquals(<<<T
 GRANT CREATE ON $database.$table TO $name;

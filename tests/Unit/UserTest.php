@@ -9,7 +9,6 @@
  */
 namespace FlexPHP\Database\Tests;
 
-use FlexPHP\Database\Factories\User\SQLSrvUserFactory;
 use FlexPHP\Database\User;
 
 class UserTest extends TestCase
@@ -20,6 +19,7 @@ class UserTest extends TestCase
         $password = 'p4sw00rd';
 
         $user = new User($name, $password);
+        $user->setPlatform('MySQL');
         $this->assertEquals(<<<T
 CREATE USER '$name'@'%' IDENTIFIED BY '$password';
 T
@@ -32,6 +32,7 @@ T
         $password = 'p4sw00rd';
 
         $user = new User($name, $password);
+        $user->setPlatform('MySQL');
         $this->assertEquals(<<<T
 DROP USER '$name'@'%';
 T
@@ -46,6 +47,7 @@ T
         $table = 'table';
 
         $user = new User($name, $password);
+        $user->setPlatform('MySQL');
         $user->setGrants(['CREATE'], $database, $table);
         $this->assertEquals(<<<T
 GRANT CREATE ON $database.$table TO '$name'@'%';
@@ -59,7 +61,7 @@ T
         $password = 'p4sw00rd';
 
         $user = new User($name, $password);
-        $user->setFactory(new SQLSrvUserFactory());
+        $user->setPlatform('SQLSrv');
         $this->assertEquals(<<<T
 CREATE LOGIN $name WITH PASSWORD = '$password';
 GO
@@ -75,7 +77,7 @@ T
         $password = 'p4sw00rd';
 
         $user = new User($name, $password);
-        $user->setFactory(new SQLSrvUserFactory());
+        $user->setPlatform('SQLSrv');
         $this->assertEquals(<<<T
 DROP USER $name;
 GO
@@ -92,7 +94,7 @@ T
         $permission = 'CREATE';
 
         $user = new User($name, $password);
-        $user->setFactory(new SQLSrvUserFactory());
+        $user->setPlatform('SQLSrv');
         $user->setGrants(['CREATE'], $database, $table);
         $this->assertEquals(<<<T
 GRANT $permission ON $database.$table TO $name;

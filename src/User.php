@@ -29,7 +29,7 @@ class User implements UserInterface
     private $host;
 
     /**
-     * @var array<int, string>
+     * @var array<int, array>
      */
     private $grants;
 
