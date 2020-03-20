@@ -16,33 +16,4 @@ use PHPUnit\Framework\TestCase as PHPUnitTestCase;
  */
 class TestCase extends PHPUnitTestCase
 {
-    public function getDataType(): array
-    {
-        return [
-            ['smallint'],
-            ['integer'],
-            ['bigint'],
-            ['decimal'],
-            ['float'],
-            ['string'],
-            ['text'],
-            ['guid'],
-            ['binary'],
-            ['blob'],
-            ['boolean'],
-            ['date'],
-            ['date_immutable'],
-            ['datetime'],
-            ['datetime_immutable'],
-            ['datetimetz'],
-            ['datetimetz_immutable'],
-            ['time'],
-            ['time_immutable'],
-            ['dateinterval'],
-            ['array'],
-            ['simple_array'],
-            ['json'],
-            ['object'],
-        ];
-    }
 }
