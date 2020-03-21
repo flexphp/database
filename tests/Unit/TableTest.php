@@ -50,7 +50,8 @@ class TableTest extends TestCase
         $this->assertEquals($schema->name(), $table->getName());
         $this->assertEquals([$column1, $column2], $table->getColumns());
         $this->assertEquals([
-            'collation' => 'utf8mb4',
+            'charset' => 'utf8mb4',
+            'collate' => 'utf8mb4_unicode_ci',
         ], $table->getOptions());
     }
 }
