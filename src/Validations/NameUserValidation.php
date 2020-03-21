@@ -32,7 +32,7 @@ class NameUserValidation implements ValidationInterface
 
         if (\count($violations)) {
             throw new NameUserValidationException(
-                \sprintf("%1\$s:\n%2\$s", $this->name, $violations)
+                \sprintf("%1\$s:\n%2\$s", $this->name, $violations->get(0)->getPropertyPath())
             );
         }
     }
