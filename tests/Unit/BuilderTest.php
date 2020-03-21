@@ -11,9 +11,7 @@ namespace FlexPHP\Database\Tests\Unit;
 
 use Exception;
 use FlexPHP\Database\Builder;
-use FlexPHP\Database\Table;
 use FlexPHP\Database\Tests\TestCase;
-use FlexPHP\Database\User;
 use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Schema;
 use FlexPHP\Schema\SchemaInterface;
@@ -54,19 +52,6 @@ T
         );
     }
 
-    public function testItCreateMySQLTable(): void
-    {
-        $table = new Table($this->getSchema());
-
-        $builder = new Builder('MySQL');
-        $builder->createTable($table);
-        $this->assertEquals(<<<T
-CREATE TABLE bar (foo VARCHAR(255) DEFAULT NULL COMMENT 'foo') DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
-T
-, $builder->toSql()
-        );
-    }
-
     public function testItCreateMySQLUser(): void
     {
         $name = 'mysql';
@@ -98,12 +83,21 @@ T
         );
     }
 
+    public function testItCreateMySQLTable(): void
+    {
+        $builder = new Builder('MySQL');
+        $builder->createTable($this->getSchema());
+        $this->assertEquals(<<<T
+CREATE TABLE bar (foo VARCHAR(255) DEFAULT NULL COMMENT 'foo') DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+T
+, $builder->toSql()
+        );
+    }
+
     public function testItCreateSQLSrvTable(): void
     {
-        $table = new Table($this->getSchema());
-
         $builder = new Builder('SQLSrv');
-        $builder->createTable($table);
+        $builder->createTable($this->getSchema());
         $this->assertEquals(<<<T
 CREATE TABLE bar (foo NVARCHAR(255));
 T

@@ -12,6 +12,7 @@ namespace FlexPHP\Database;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Schema as DBALSchema;
 use Doctrine\DBAL\Schema\SchemaConfig as DBALSchemaConfig;
+use FlexPHP\Schema\SchemaInterface;
 
 final class Builder
 {
@@ -88,8 +89,10 @@ final class Builder
         $this->users[] = $user->toSqlCreate();
     }
 
-    public function createTable(TableInterface $table): void
+    public function createTable(SchemaInterface $schema): void
     {
+        $table = new Table($schema);
+
         $DBALSchemaConfig = new DBALSchemaConfig();
         $DBALSchemaConfig->setDefaultTableOptions($table->getOptions());
 
@@ -134,11 +137,6 @@ final class Builder
 
         return $collate;
     }
-
-    // private function isMySQLPlatform(): bool
-    // {
-    //     return $this->platform === self::PLATFORM_MYSQL;
-    // }
 
     private function isSQLSrvPlatform(): bool
     {
