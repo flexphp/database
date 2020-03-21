@@ -84,11 +84,11 @@ class Builder
         $sql = '';
         $glue = "\n";
 
-        // if (\count($this->users) > 0) {
+        // if (\count($this->users)) {
         //     $sql .= \implode($glue, $this->users);
         // }
 
-        if (\count($this->tables) > 0) {
+        if (\count($this->tables)) {
             $sql .= \implode($glue, $this->tables);
         }
 

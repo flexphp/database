@@ -19,28 +19,36 @@ class TableTest extends TestCase
 {
     public function testItDefinition(): void
     {
-        $attributes = [
+        $attribute1 = [
             Keyword::NAME => 'foo',
             Keyword::DATATYPE => 'string',
+            Keyword::CONSTRAINTS => [
+                'minlength' => 10,
+                'maxlength' => 100,
+            ],
+        ];
+
+        $attribute2 = [
+            Keyword::NAME => 'baz',
+            Keyword::DATATYPE => 'integer',
             Keyword::CONSTRAINTS => [
                 'min' => 10,
                 'max' => 100,
             ],
         ];
 
-        $schemaAttribute = new SchemaAttribute($attributes);
+        $schemaAttribute1 = new SchemaAttribute('foo', 'string', $attribute1[Keyword::CONSTRAINTS]);
+        $schemaAttribute2 = new SchemaAttribute('baz', 'integer', $attribute2[Keyword::CONSTRAINTS]);
 
-        $column = new Column($schemaAttribute);
+        $column1 = new Column($schemaAttribute1);
+        $column2 = new Column($schemaAttribute2);
 
-        $schema = new Schema();
-        $schema->setName('bar');
-        $schema->setAttributes(['foo' => $attributes]);
-        
+        $schema = new Schema('bar', 'title', [$attribute1, $attribute2]);
 
         $table = new Table($schema);
 
         $this->assertEquals($schema->name(), $table->getName());
-        $this->assertEquals([$column], $table->getColumns());
+        $this->assertEquals([$column1, $column2], $table->getColumns());
         $this->assertEquals([
             'collation' => 'utf8mb4',
         ], $table->getOptions());

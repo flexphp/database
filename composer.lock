@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aab7b662f24f1dbb7acfa82209ccde42",
+    "content-hash": "f0273db7972bfccad79d562120343f43",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -249,16 +249,10 @@
         {
             "name": "flexphp/schema",
             "version": "dev-develop",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/flexphp/flex-schema.git",
-                "reference": "c905885d667b339cdcc55779e7d91f15ccf596ea"
-            },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/flexphp/flex-schema/zipball/c905885d667b339cdcc55779e7d91f15ccf596ea",
-                "reference": "c905885d667b339cdcc55779e7d91f15ccf596ea",
-                "shasum": ""
+                "type": "path",
+                "url": "../flex-schema",
+                "reference": "c905885d667b339cdcc55779e7d91f15ccf596ea"
             },
             "require": {
                 "ext-json": "*",
@@ -277,7 +271,30 @@
                     "FlexPHP\\Schema\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "FlexPHP\\Schema\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "phpcs": [
+                    "phpcs --standard=PSR2 src/"
+                ],
+                "phpfix": [
+                    "phpcbf --standard=PSR2 --extensions=php src/"
+                ],
+                "phpstan": [
+                    "phpstan analyse -l 8 src/"
+                ],
+                "phpunit": [
+                    "phpunit --bootstrap vendor/autoload.php --testdox tests/"
+                ],
+                "test": [
+                    "@phpcs",
+                    "@phpstan",
+                    "@phpunit"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -287,8 +304,7 @@
                     "email": "freddie.gar@outlook.com"
                 }
             ],
-            "description": "One schema, any framework",
-            "time": "2020-03-11T04:57:19+00:00"
+            "description": "One schema, any framework"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -1040,16 +1056,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.14",
+            "version": "0.12.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "37bdd26a80235d0f9045b49f4151102b7831cbe2"
+                "reference": "b2c37bda79fdb11d801ce208ce391cffc0f572e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/37bdd26a80235d0f9045b49f4151102b7831cbe2",
-                "reference": "37bdd26a80235d0f9045b49f4151102b7831cbe2",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/b2c37bda79fdb11d801ce208ce391cffc0f572e6",
+                "reference": "b2c37bda79fdb11d801ce208ce391cffc0f572e6",
                 "shasum": ""
             },
             "require": {
@@ -1075,7 +1091,7 @@
                 "MIT"
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
-            "time": "2020-03-02T22:29:43+00:00"
+            "time": "2020-03-17T15:39:11+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",

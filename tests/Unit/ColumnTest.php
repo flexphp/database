@@ -10,20 +10,15 @@
 namespace FlexPHP\Database\Tests;
 
 use FlexPHP\Database\Column;
-use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\SchemaAttribute;
 
 class ColumnTest extends TestCase
 {
     public function testItDefinition(): void
     {
-        $schemaAttribute = new SchemaAttribute([
-            Keyword::NAME => 'foo',
-            Keyword::DATATYPE => 'string',
-            Keyword::CONSTRAINTS => [
-                'min' => 10,
-                'max' => 100,
-            ],
+        $schemaAttribute = new SchemaAttribute('foo', 'string', [
+            'min' => 10,
+            'max' => 100,
         ]);
 
         $column = new Column($schemaAttribute);

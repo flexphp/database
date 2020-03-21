@@ -76,7 +76,6 @@ class User implements UserInterface
     {
         $factory = $this->getFactory();
         $factory->setName($this->name);
-        $factory->setPassword($this->password);
         $factory->setHost($this->host);
 
         return $factory->asDrop();

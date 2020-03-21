@@ -30,9 +30,9 @@ class NameUserValidation implements ValidationInterface
 
         $violations = $validator->validate($this->name);
 
-        if (0 !== \count($violations)) {
+        if (\count($violations)) {
             throw new NameUserValidationException(
-                \sprintf("%1\$s:\n%2\$s", $this->name, (string)$violations->get(0)->getMessage())
+                \sprintf("%1\$s:\n%2\$s", $this->name, $violations)
             );
         }
     }

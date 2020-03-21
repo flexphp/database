@@ -22,7 +22,7 @@ class BuilderTest extends TestCase
     public function testItPlatformErrorThrowException(): void
     {
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('not supported');
+        $this->expectExceptionMessage('try: MySQL, SQLSrv');
 
         new Builder('Unknow');
     }
@@ -55,9 +55,7 @@ T
 
     public function getSchema(): SchemaInterface
     {
-        $schema = new Schema();
-        $schema->setName('bar');
-        $schema->setAttributes([[
+        return new Schema('bar', 'title', [[
             Keyword::NAME => 'foo',
             Keyword::DATATYPE => 'string',
             Keyword::CONSTRAINTS => [
@@ -65,7 +63,5 @@ T
                 'max' => 100,
             ],
         ]]);
-
-        return $schema;
     }
 }

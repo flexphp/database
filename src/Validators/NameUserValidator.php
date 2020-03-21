@@ -10,7 +10,6 @@
 namespace FlexPHP\Database\Validators;
 
 use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
@@ -35,10 +34,10 @@ class NameUserValidator
         $validator = Validation::createValidator();
 
         return $validator->validate($name, [
-            new NotBlank(),
             new Length([
                 'min' => $this->minLength,
                 'max' => $this->maxLength,
+                'allowEmptyString' => false,
             ]),
             new Regex([
                 'pattern' => '/^[a-zA-Z][a-zA-Z0-9_\-\.]*$/',
