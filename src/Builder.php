@@ -80,10 +80,13 @@ final class Builder
             . ';';
     }
 
-    // public function createUser(UserInterface $user): void
-    // {
-    //     $this->users[] = $user->toSqlCreate();
-    // }
+    public function createUser(string $name, string $password, string $host = ''): void
+    {
+        $user = new User($name, $password, $host);
+        $user->setPlatform($this->platform);
+
+        $this->users[] = $user->toSqlCreate();
+    }
 
     public function createTable(TableInterface $table): void
     {
@@ -109,9 +112,10 @@ final class Builder
         if (\count($this->databases)) {
             $sql .= \implode($glue, $this->databases);
         }
-        // if (\count($this->users)) {
-        //     $sql .= \implode($glue, $this->users);
-        // }
+
+        if (\count($this->users)) {
+            $sql .= \implode($glue, $this->users);
+        }
 
         if (\count($this->tables)) {
             $sql .= \implode($glue, $this->tables);

@@ -13,6 +13,7 @@ use Exception;
 use FlexPHP\Database\Builder;
 use FlexPHP\Database\Table;
 use FlexPHP\Database\Tests\TestCase;
+use FlexPHP\Database\User;
 use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Schema;
 use FlexPHP\Schema\SchemaInterface;
@@ -61,6 +62,37 @@ T
         $builder->createTable($table);
         $this->assertEquals(<<<T
 CREATE TABLE bar (foo VARCHAR(255) DEFAULT NULL COMMENT 'foo') DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+T
+, $builder->toSql()
+        );
+    }
+
+    public function testItCreateMySQLUser(): void
+    {
+        $name = 'mysql';
+        $password = 'p4sw00rd';
+
+        $builder = new Builder('MySQL');
+        $builder->createUser($name, $password);
+        $this->assertEquals(<<<T
+CREATE USER '$name'@'%' IDENTIFIED BY '$password';
+T
+, $builder->toSql()
+        );
+    }
+
+    public function testItCreateSQLSrvUser(): void
+    {
+        $name = 'sqlsrv';
+        $password = 'p4sw00rd';
+
+        $builder = new Builder('SQLSrv');
+        $builder->createUser($name, $password);
+        $this->assertEquals(<<<T
+CREATE LOGIN $name WITH PASSWORD = '$password';
+GO
+CREATE USER $name FOR LOGIN $name;
+GO
 T
 , $builder->toSql()
         );
