@@ -27,20 +27,46 @@ class BuilderTest extends TestCase
         new Builder('Unknow');
     }
 
-    public function testItCreateMySQL(): void
+    public function testItCreateMySQLDatabase(): void
+    {
+        $name = 'db';
+
+        $builder = new Builder('MySQL');
+        $builder->createDatabase($name);
+        $this->assertEquals(<<<T
+CREATE DATABASE $name CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+T
+, $builder->toSql()
+        );
+    }
+
+    public function testItCreateSQLSrvDatabase(): void
+    {
+        $name = 'db';
+
+        $builder = new Builder('SQLSrv');
+        $builder->createDatabase($name);
+        $this->assertEquals(<<<T
+CREATE DATABASE $name COLLATE latin1_general_100_ci_ai_sc;
+T
+, $builder->toSql()
+        );
+    }
+
+    public function testItCreateMySQLTable(): void
     {
         $table = new Table($this->getSchema());
 
         $builder = new Builder('MySQL');
         $builder->createTable($table);
         $this->assertEquals(<<<T
-CREATE TABLE bar (foo VARCHAR(255) DEFAULT NULL COMMENT 'foo') DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+CREATE TABLE bar (foo VARCHAR(255) DEFAULT NULL COMMENT 'foo') DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
 T
 , $builder->toSql()
         );
     }
 
-    public function testItCreateSQLSrv(): void
+    public function testItCreateSQLSrvTable(): void
     {
         $table = new Table($this->getSchema());
 

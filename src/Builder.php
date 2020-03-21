@@ -13,8 +13,17 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Schema as DBALSchema;
 use Doctrine\DBAL\Schema\SchemaConfig as DBALSchemaConfig;
 
-class Builder
+final class Builder
 {
+    public const PLATFORM_MYSQL = 'MySQL';
+
+    public const PLATFORM_SQLSRV = 'SQLSrv';
+
+    /**
+     * @var string
+     */
+    private $platform;
+
     /**
      * @var AbstractPlatform
      */
@@ -24,6 +33,11 @@ class Builder
      * @var DBALSchema
      */
     private $DBALSchema;
+
+    /**
+     * @var array<int, string>
+     */
+    private $databases = [];
 
     /**
      * @var array<int, string>
@@ -39,8 +53,8 @@ class Builder
      * @var array<string, string>
      */
     private $platformSupport = [
-        'MySQL' => 'MySQL57',
-        'SQLSrv' => 'SQLServer2012',
+        self::PLATFORM_MYSQL => 'MySQL57',
+        self::PLATFORM_SQLSRV => 'SQLServer2012',
     ];
 
     public function __construct(string $platform)
@@ -55,8 +69,15 @@ class Builder
 
         $fqdnPlatform = \sprintf('\Doctrine\DBAL\Platforms\%sPlatform', $this->platformSupport[$platform]);
 
+        $this->platform = $platform;
         $this->DBALPlatform = new $fqdnPlatform();
-        $this->DBALSchema = new DBALSchema();
+    }
+
+    public function createDatabase(string $name): void
+    {
+        $this->databases[] = $this->DBALPlatform->getCreateDatabaseSQL($name)
+            . ' ' . $this->getCollateDatabase()
+            . ';';
     }
 
     // public function createUser(UserInterface $user): void
@@ -69,8 +90,9 @@ class Builder
         $DBALSchemaConfig = new DBALSchemaConfig();
         $DBALSchemaConfig->setDefaultTableOptions($table->getOptions());
 
+        $this->DBALSchema = new DBALSchema([], [], $DBALSchemaConfig);
+
         $DBALTable = $this->DBALSchema->createTable($table->getName());
-        $DBALTable->setSchemaConfig($DBALSchemaConfig);
 
         foreach ($table->getColumns() as $column) {
             $DBALTable->addColumn($column->getName(), $column->getType(), $column->getOptions());
@@ -84,6 +106,9 @@ class Builder
         $sql = '';
         $glue = "\n";
 
+        if (\count($this->databases)) {
+            $sql .= \implode($glue, $this->databases);
+        }
         // if (\count($this->users)) {
         //     $sql .= \implode($glue, $this->users);
         // }
@@ -93,5 +118,26 @@ class Builder
         }
 
         return $sql;
+    }
+
+    private function getCollateDatabase(): string
+    {
+        $collate = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci';
+
+        if ($this->isSQLSrvPlatform()) {
+            $collate = 'COLLATE latin1_general_100_ci_ai_sc';
+        }
+
+        return $collate;
+    }
+
+    // private function isMySQLPlatform(): bool
+    // {
+    //     return $this->platform === self::PLATFORM_MYSQL;
+    // }
+
+    private function isSQLSrvPlatform(): bool
+    {
+        return $this->platform === self::PLATFORM_SQLSRV;
     }
 }
