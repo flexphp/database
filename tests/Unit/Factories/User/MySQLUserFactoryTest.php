@@ -62,7 +62,7 @@ T
         $name = 'jon';
         $password = 'p4sw00rd';
 
-        $user = new User($name, $password);
+        $user = new User($name, $password, $host);
         $this->assertEquals(<<<T
 DROP USER '$name'@'%';
 T

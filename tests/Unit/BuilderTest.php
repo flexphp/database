@@ -35,8 +35,7 @@ class BuilderTest extends TestCase
         $this->assertEquals(<<<T
 CREATE DATABASE $name CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 T
-, $builder->toSql()
-        );
+, $builder->toSql());
     }
 
     public function testItCreateSQLSrvDatabase(): void
@@ -48,8 +47,7 @@ T
         $this->assertEquals(<<<T
 CREATE DATABASE $name COLLATE latin1_general_100_ci_ai_sc;
 T
-, $builder->toSql()
-        );
+, $builder->toSql());
     }
 
     public function testItCreateMySQLUser(): void
@@ -62,8 +60,7 @@ T
         $this->assertEquals(<<<T
 CREATE USER '$name'@'%' IDENTIFIED BY '$password';
 T
-, $builder->toSql()
-        );
+, $builder->toSql());
     }
 
     public function testItCreateSQLSrvUser(): void
@@ -79,8 +76,7 @@ GO
 CREATE USER $name FOR LOGIN $name;
 GO
 T
-, $builder->toSql()
-        );
+, $builder->toSql());
     }
 
     public function testItCreateMySQLTable(): void
@@ -88,10 +84,11 @@ T
         $builder = new Builder('MySQL');
         $builder->createTable($this->getSchema());
         $this->assertEquals(<<<T
-CREATE TABLE bar (foo VARCHAR(255) DEFAULT NULL COMMENT 'foo') DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+CREATE TABLE bar (
+    foo VARCHAR(255) DEFAULT NULL COMMENT 'foo'
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
 T
-, $builder->toSql()
-        );
+, $builder->toSql());
     }
 
     public function testItCreateSQLSrvTable(): void
@@ -99,10 +96,50 @@ T
         $builder = new Builder('SQLSrv');
         $builder->createTable($this->getSchema());
         $this->assertEquals(<<<T
-CREATE TABLE bar (foo NVARCHAR(255));
+CREATE TABLE bar (
+    foo NVARCHAR(255)
+);
 T
-, $builder->toSql()
-        );
+, $builder->toSql());
+    }
+
+    public function testItCreateMySQLComplete(): void
+    {
+        $dbname = 'complete';
+        $username = 'username';
+        $password = 'password';
+        $host = 'host';
+        $schema = new Schema('bar', 'title', [
+            [
+                Keyword::NAME => 'foo',
+                Keyword::DATATYPE => 'string',
+                Keyword::CONSTRAINTS => [
+                    'minlength' => 10,
+                    'maxlength' => 100,
+                ],
+            ], [
+                Keyword::NAME => 'bar',
+                Keyword::DATATYPE => 'integer',
+                Keyword::CONSTRAINTS => [
+                    'min' => 10,
+                    'max' => 100,
+                ],
+            ],
+        ]);
+
+        $builder = new Builder('MySQL');
+        $builder->createDatabase($dbname);
+        $builder->createUser($username, $password, $host);
+        $builder->createTable($schema);
+        $this->assertEquals(<<<T
+CREATE DATABASE $dbname CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE USER '$username'@'$host' IDENTIFIED BY '$password';
+CREATE TABLE bar (
+    foo VARCHAR(100) DEFAULT NULL COMMENT 'foo',
+    bar INT DEFAULT NULL COMMENT 'bar'
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+T
+, $builder->toSql());
     }
 
     public function getSchema(): SchemaInterface

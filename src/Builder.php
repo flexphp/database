@@ -104,27 +104,27 @@ final class Builder
             $DBALTable->addColumn($column->getName(), $column->getType(), $column->getOptions());
         }
 
-        $this->tables[] = $this->DBALSchema->toSql($this->DBALPlatform)[0] . ';';
+        $this->tables[] = $this->getPrettyTable($this->DBALSchema->toSql($this->DBALPlatform)[0]) . ';';
     }
 
     public function toSql(): string
     {
-        $sql = '';
+        $sql = [];
         $glue = "\n";
 
         if (\count($this->databases)) {
-            $sql .= \implode($glue, $this->databases);
+            $sql[] = \implode($glue, $this->databases);
         }
 
         if (\count($this->users)) {
-            $sql .= \implode($glue, $this->users);
+            $sql[] = \implode($glue, $this->users);
         }
 
         if (\count($this->tables)) {
-            $sql .= \implode($glue, $this->tables);
+            $sql[] = \implode($glue, $this->tables);
         }
 
-        return $sql;
+        return \implode($glue, $sql);
     }
 
     private function getCollateDatabase(): string
@@ -141,5 +141,23 @@ final class Builder
     private function isSQLSrvPlatform(): bool
     {
         return $this->platform === self::PLATFORM_SQLSRV;
+    }
+
+    private function getPrettyTable(string $sql): string
+    {
+        $tag = '<columns>';
+        $regExpColumns = "/\((?$tag.*)\)/";
+        $prettySql = $sql;
+
+        \preg_match($regExpColumns, $sql, $matches);
+
+        if (!empty($matches['columns'])) {
+            $columns = $matches['columns'];
+            $table = \str_replace($columns, "\n    $tag\n", $sql);
+
+            $prettySql = \str_replace($tag, \str_replace(', ', ",\n    ", $columns), $table);
+        }
+
+        return $prettySql;
     }
 }
