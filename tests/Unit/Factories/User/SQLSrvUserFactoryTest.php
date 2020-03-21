@@ -19,7 +19,7 @@ class SQLSrvUserFactoryTest extends TestCase
     /**
      * @dataProvider getNameInvalid
      */
-    public function testItSrvCreateWithNameInvalidThrownException($name): void
+    public function testItSrvCreateWithNameInvalidThrownException(string $name): void
     {
         $this->expectException(UserDatabaseException::class);
         $user = new User($name, 'password');
@@ -60,7 +60,7 @@ T
     /**
      * @dataProvider getPermissionValid
      */
-    public function testItSrvGrantOptionOnAll($permission): void
+    public function testItSrvGrantOptionOnAll(string $permission): void
     {
         $name = 'jon';
         $password = 'p4sw00rd';
@@ -79,7 +79,7 @@ T
     /**
      * @dataProvider getPermissionValid
      */
-    public function testItSrvGrantOptionOnDatabase($permission): void
+    public function testItSrvGrantOptionOnDatabase(string $permission): void
     {
         $name = 'jon';
         $password = 'p4sw00rd';
@@ -99,7 +99,7 @@ T
     /**
      * @dataProvider getPermissionValid
      */
-    public function testItSrvGrantOptionOnTable($permission): void
+    public function testItSrvGrantOptionOnTable(string $permission): void
     {
         $name = 'jon';
         $password = 'p4sw00rd';
