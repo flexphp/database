@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f0273db7972bfccad79d562120343f43",
+    "content-hash": "aab7b662f24f1dbb7acfa82209ccde42",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -249,10 +249,16 @@
         {
             "name": "flexphp/schema",
             "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/flexphp/flex-schema.git",
+                "reference": "babbbc38b1c47814625ac4fdec2a65cd3033a7fa"
+            },
             "dist": {
-                "type": "path",
-                "url": "../flex-schema",
-                "reference": "c905885d667b339cdcc55779e7d91f15ccf596ea"
+                "type": "zip",
+                "url": "https://api.github.com/repos/flexphp/flex-schema/zipball/babbbc38b1c47814625ac4fdec2a65cd3033a7fa",
+                "reference": "babbbc38b1c47814625ac4fdec2a65cd3033a7fa",
+                "shasum": ""
             },
             "require": {
                 "ext-json": "*",
@@ -271,30 +277,7 @@
                     "FlexPHP\\Schema\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "FlexPHP\\Schema\\Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "phpcs": [
-                    "phpcs --standard=PSR2 src/"
-                ],
-                "phpfix": [
-                    "phpcbf --standard=PSR2 --extensions=php src/"
-                ],
-                "phpstan": [
-                    "phpstan analyse -l 8 src/"
-                ],
-                "phpunit": [
-                    "phpunit --bootstrap vendor/autoload.php --testdox tests/"
-                ],
-                "test": [
-                    "@phpcs",
-                    "@phpstan",
-                    "@phpunit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -304,7 +287,8 @@
                     "email": "freddie.gar@outlook.com"
                 }
             ],
-            "description": "One schema, any framework"
+            "description": "One schema, any framework",
+            "time": "2020-03-21T01:48:20+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",

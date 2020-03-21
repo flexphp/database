@@ -49,12 +49,6 @@
             "php": "7.1.3"
         }
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../flex-schema"
-        }
-    ],
     "prefer-stable": true,
     "minimum-stability": "dev"
 }
