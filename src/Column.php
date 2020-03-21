@@ -11,7 +11,7 @@ namespace FlexPHP\Database;
 
 use FlexPHP\Schema\SchemaAttributeInterface;
 
-class Column implements ColumnInterface
+final class Column implements ColumnInterface
 {
     /**
      * @var SchemaAttributeInterface

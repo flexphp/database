@@ -9,7 +9,7 @@
  */
 namespace FlexPHP\Database\Factories\User;
 
-class SQLSrvUserFactory extends AbstractUserFactory
+final class SQLSrvUserFactory extends AbstractUserFactory
 {
     public const MAPPING_PERMISSION = [
         'ALL PRIVILEGES' => 'ALL',

@@ -9,7 +9,7 @@
  */
 namespace FlexPHP\Database\Factories\User;
 
-class MySQLUserFactory extends AbstractUserFactory
+final class MySQLUserFactory extends AbstractUserFactory
 {
     public function asCreate(): string
     {

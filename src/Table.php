@@ -11,7 +11,7 @@ namespace FlexPHP\Database;
 
 use FlexPHP\Schema\SchemaInterface;
 
-class Table implements TableInterface
+final class Table implements TableInterface
 {
     /**
      * @var SchemaInterface

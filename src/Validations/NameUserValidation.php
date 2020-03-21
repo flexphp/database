@@ -12,7 +12,7 @@ namespace FlexPHP\Database\Validations;
 use FlexPHP\Database\Exception\NameUserValidationException;
 use FlexPHP\Database\Validators\NameUserValidator;
 
-class NameUserValidation implements ValidationInterface
+final class NameUserValidation implements ValidationInterface
 {
     /**
      * @var string

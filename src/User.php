@@ -11,7 +11,7 @@ namespace FlexPHP\Database;
 
 use FlexPHP\Database\Interfaces\UserFactoryInterface;
 
-class User implements UserInterface
+final class User implements UserInterface
 {
     /**
      * @var string
