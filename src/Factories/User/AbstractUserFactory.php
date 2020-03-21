@@ -48,6 +48,10 @@ abstract class AbstractUserFactory implements UserFactoryInterface
 
     public function setHost(string $host): void
     {
+        if (empty(\trim($host))) {
+            $host = '%';
+        }
+
         $this->host = $host;
     }
 

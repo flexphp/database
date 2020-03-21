@@ -52,7 +52,12 @@ T
 , $user->toSqlCreate());
     }
 
-    public function testItDropWithDefaultHost(): void
+    /**
+     * @dataProvider getHostDefault
+     *
+     * @param mixed $host
+     */
+    public function testItDropWithDefaultHost($host): void
     {
         $name = 'jon';
         $password = 'p4sw00rd';
@@ -157,6 +162,15 @@ T
     public function getMappingPermission(string $permission): string
     {
         return SQLSrvUserFactory::MAPPING_PERMISSION[$permission];
+    }
+
+    public function getHostDefault(): array
+    {
+        return [
+            [''],
+            [' '],
+            ['%'],
+        ];
     }
 
     public function getNameInvalid(): array
