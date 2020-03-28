@@ -29,7 +29,8 @@ CREATE LOGIN %1\$s WITH PASSWORD = '%2\$s';
 GO
 CREATE USER %1\$s FOR LOGIN %1\$s;
 GO
-T, $this->name, $this->password);
+T
+, $this->name, $this->password);
     }
 
     public function asDrop(): string
@@ -37,7 +38,8 @@ T, $this->name, $this->password);
         return \sprintf(<<<T
 DROP USER %s;
 GO
-T, $this->name);
+T
+, $this->name);
     }
 
     public function asPrivileges(): string
@@ -105,7 +107,8 @@ T, $this->name);
         return \sprintf(<<<T
 GRANT %s TO %s;
 GO
-T, $permission, $this->name);
+T
+, $permission, $this->name);
     }
 
     private function getTemplateScope(string $permission, string $scope): string
@@ -113,6 +116,7 @@ T, $permission, $this->name);
         return \sprintf(<<<T
 GRANT %s %s TO %s;
 GO
-T, $permission, $scope, $this->name);
+T
+, $permission, $scope, $this->name);
     }
 }
