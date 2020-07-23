@@ -110,7 +110,7 @@ final class Builder
     public function toSql(): string
     {
         $sql = [];
-        $glue = "\n";
+        $glue = \str_repeat("\n", 2);
 
         if (\count($this->databases)) {
             $sql[] = \implode($glue, $this->databases);

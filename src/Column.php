@@ -38,7 +38,7 @@ final class Column implements ColumnInterface
         return [
             'length' => $this->schemaAttribute->maxLength(),
             'notnull' => $this->schemaAttribute->isRequired(),
-            // 'autoincrement' => $this->schemaAttribute->name(),
+            'autoincrement' => $this->schemaAttribute->isAi(),
             'comment' => $this->schemaAttribute->name(),
             // 'precision' => $this->schemaAttribute->name(),
             // 'scale' => $this->schemaAttribute->name(),

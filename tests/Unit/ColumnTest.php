@@ -28,6 +28,26 @@ class ColumnTest extends TestCase
         $this->assertEquals([
             'length' => $schemaAttribute->maxLength(),
             'notnull' => $schemaAttribute->isRequired(),
+            'autoincrement' => $schemaAttribute->isAi(),
+            'comment' => $schemaAttribute->name(),
+        ], $column->getOptions());
+    }
+
+    public function testItDefinitionAi(): void
+    {
+        $schemaAttribute = new SchemaAttribute('foo', 'integer', [
+            'pk' => true,
+            'ai' => true,
+        ]);
+
+        $column = new Column($schemaAttribute);
+
+        $this->assertEquals($schemaAttribute->name(), $column->getName());
+        $this->assertEquals($schemaAttribute->dataType(), $column->getType());
+        $this->assertEquals([
+            'length' => $schemaAttribute->maxLength(),
+            'notnull' => $schemaAttribute->isRequired(),
+            'autoincrement' => $schemaAttribute->isAi(),
             'comment' => $schemaAttribute->name(),
         ], $column->getOptions());
     }

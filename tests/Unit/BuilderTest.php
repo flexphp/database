@@ -111,13 +111,23 @@ T
         $host = 'host';
         $schema = new Schema('bar', 'title', [
             [
+                Keyword::NAME => 'Pk',
+                Keyword::DATATYPE => 'integer',
+                Keyword::CONSTRAINTS => [
+                    'ai' => true,
+                    'minlength' => 10,
+                    'maxlength' => 100,
+                ],
+            ],
+            [
                 Keyword::NAME => 'foo',
                 Keyword::DATATYPE => 'string',
                 Keyword::CONSTRAINTS => [
                     'minlength' => 10,
                     'maxlength' => 100,
                 ],
-            ], [
+            ],
+            [
                 Keyword::NAME => 'bar',
                 Keyword::DATATYPE => 'integer',
                 Keyword::CONSTRAINTS => [
@@ -127,16 +137,45 @@ T
             ],
         ]);
 
+        $schemaFk = new Schema('fuz', 'title', [
+            [
+                Keyword::NAME => 'Pk',
+                Keyword::DATATYPE => 'string',
+                Keyword::CONSTRAINTS => [
+                    'ai' => true,
+                    'minlength' => 10,
+                    'maxlength' => 100,
+                ],
+            ],
+            [
+                Keyword::NAME => 'barId',
+                Keyword::DATATYPE => 'integer',
+                Keyword::CONSTRAINTS => [
+                    'fk' => 'bar',
+                ],
+            ],
+        ]);
+
         $builder = new Builder('MySQL');
         $builder->createDatabase($dbname);
         $builder->createUser($username, $password, $host);
         $builder->createTable($schema);
+        $builder->createTable($schemaFk);
+
         $this->assertEquals(<<<T
 CREATE DATABASE $dbname CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
 CREATE USER '$username'@'$host' IDENTIFIED BY '$password';
+
 CREATE TABLE bar (
+    Pk INT AUTO_INCREMENT DEFAULT NULL COMMENT 'Pk',
     foo VARCHAR(100) DEFAULT NULL COMMENT 'foo',
     bar INT DEFAULT NULL COMMENT 'bar'
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+
+CREATE TABLE fuz (
+    Pk VARCHAR(100) DEFAULT NULL COMMENT 'Pk',
+    barId INT DEFAULT NULL COMMENT 'barId'
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
 T
 , $builder->toSql());
