@@ -102,9 +102,19 @@ final class Builder
 
         foreach ($table->getColumns() as $column) {
             $DBALTable->addColumn($column->getName(), $column->getType(), $column->getOptions());
+
+            if ($column->isPrimaryKey()) {
+                $DBALTable->setPrimaryKey([$column->getName()]);
+            }
+
+            if ($column->isForeingKey()) {
+                $fkRel = $schema->fkRelations()[$column->getName()];
+
+                $DBALTable->addForeignKeyConstraint($fkRel['pkTable'], [$fkRel['pkId']], [$fkRel['fkId']]);
+            }
         }
 
-        $this->tables[] = $this->getPrettyTable($this->DBALSchema->toSql($this->DBALPlatform)[0]) . ';';
+        $this->tables[] = $this->getPrettyTable(\implode(";\n\n", $this->DBALSchema->toSql($this->DBALPlatform))) . ';';
     }
 
     public function toSql(): string

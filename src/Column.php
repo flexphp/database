@@ -33,6 +33,16 @@ final class Column implements ColumnInterface
         return $this->schemaAttribute->dataType();
     }
 
+    public function isPrimaryKey(): bool
+    {
+        return $this->schemaAttribute->isPk();
+    }
+
+    public function isForeingKey(): bool
+    {
+        return $this->schemaAttribute->isFk();
+    }
+
     public function getOptions(): array
     {
         return [

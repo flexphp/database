@@ -99,6 +99,8 @@ T
 CREATE TABLE bar (
     foo NVARCHAR(255)
 );
+
+EXEC sp_addextendedproperty N'MS_Description', N'foo', N'SCHEMA', 'dbo', N'TABLE', 'bar', N'COLUMN', foo;
 T
 , $builder->toSql());
     }
@@ -175,8 +177,11 @@ CREATE TABLE bar (
 
 CREATE TABLE fuz (
     Pk VARCHAR(100) DEFAULT NULL COMMENT 'Pk',
-    barId INT DEFAULT NULL COMMENT 'barId'
+    barId INT DEFAULT NULL COMMENT 'barId',
+    INDEX IDX_51837B119A5BAE65 (barId)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+
+ALTER TABLE fuz ADD CONSTRAINT FK_51837B119A5BAE65 FOREIGN KEY (barId) REFERENCES bar (id);
 T
 , $builder->toSql());
     }

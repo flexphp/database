@@ -25,6 +25,8 @@ class ColumnTest extends TestCase
 
         $this->assertEquals($schemaAttribute->name(), $column->getName());
         $this->assertEquals($schemaAttribute->dataType(), $column->getType());
+        $this->assertFalse($column->isPrimaryKey());
+        $this->assertFalse($column->isForeingKey());
         $this->assertEquals([
             'length' => $schemaAttribute->maxLength(),
             'notnull' => $schemaAttribute->isRequired(),
@@ -44,6 +46,28 @@ class ColumnTest extends TestCase
 
         $this->assertEquals($schemaAttribute->name(), $column->getName());
         $this->assertEquals($schemaAttribute->dataType(), $column->getType());
+        $this->assertTrue($column->isPrimaryKey());
+        $this->assertFalse($column->isForeingKey());
+        $this->assertEquals([
+            'length' => $schemaAttribute->maxLength(),
+            'notnull' => $schemaAttribute->isRequired(),
+            'autoincrement' => $schemaAttribute->isAi(),
+            'comment' => $schemaAttribute->name(),
+        ], $column->getOptions());
+    }
+
+    public function testItDefinitionPk(): void
+    {
+        $schemaAttribute = new SchemaAttribute('bar', 'integer', [
+            'fk' => 'baz',
+        ]);
+
+        $column = new Column($schemaAttribute);
+
+        $this->assertEquals($schemaAttribute->name(), $column->getName());
+        $this->assertEquals($schemaAttribute->dataType(), $column->getType());
+        $this->assertFalse($column->isPrimaryKey());
+        $this->assertTrue($column->isForeingKey());
         $this->assertEquals([
             'length' => $schemaAttribute->maxLength(),
             'notnull' => $schemaAttribute->isRequired(),

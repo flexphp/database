@@ -19,5 +19,9 @@ interface ColumnInterface
 
     public function getType(): string;
 
+    public function isPrimaryKey(): bool;
+
+    public function isForeingKey(): bool;
+
     public function getOptions(): array;
 }
