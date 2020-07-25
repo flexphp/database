@@ -252,12 +252,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/flexphp/flex-schema.git",
-                "reference": "287cbe30a18a473e129e44a0422d8cb084a7fc32"
+                "reference": "311b68c0087e5e1df572ffbc1c57efa944c56698"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flexphp/flex-schema/zipball/287cbe30a18a473e129e44a0422d8cb084a7fc32",
-                "reference": "287cbe30a18a473e129e44a0422d8cb084a7fc32",
+                "url": "https://api.github.com/repos/flexphp/flex-schema/zipball/311b68c0087e5e1df572ffbc1c57efa944c56698",
+                "reference": "311b68c0087e5e1df572ffbc1c57efa944c56698",
                 "shasum": ""
             },
             "require": {
@@ -289,7 +289,7 @@
                 }
             ],
             "description": "One schema, any framework",
-            "time": "2020-07-22T14:29:04+00:00"
+            "time": "2020-07-25T17:51:51+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -479,16 +479,16 @@
         },
         {
             "name": "symfony/validator",
-            "version": "v4.4.10",
+            "version": "v4.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/validator.git",
-                "reference": "2fae3378102cff29976ce9e35f6964c78fce02b6"
+                "reference": "f2b1e1d0c731987f15268816bc9cd998bd50a468"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/validator/zipball/2fae3378102cff29976ce9e35f6964c78fce02b6",
-                "reference": "2fae3378102cff29976ce9e35f6964c78fce02b6",
+                "url": "https://api.github.com/repos/symfony/validator/zipball/f2b1e1d0c731987f15268816bc9cd998bd50a468",
+                "reference": "f2b1e1d0c731987f15268816bc9cd998bd50a468",
                 "shasum": ""
             },
             "require": {
@@ -568,11 +568,11 @@
             ],
             "description": "Symfony Validator Component",
             "homepage": "https://symfony.com",
-            "time": "2020-05-30T18:50:54+00:00"
+            "time": "2020-06-30T17:40:09+00:00"
         },
         {
             "name": "symfony/yaml",
-            "version": "v4.4.10",
+            "version": "v4.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
@@ -2302,16 +2302,16 @@
         },
         {
             "name": "symfony/config",
-            "version": "v4.4.10",
+            "version": "v4.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "395f6e09e1dc6ac9c1a5eea3b7f44f7a820a5504"
+                "reference": "b1d8f0d9341ea1d378b8b043ba90739f37c49d36"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/395f6e09e1dc6ac9c1a5eea3b7f44f7a820a5504",
-                "reference": "395f6e09e1dc6ac9c1a5eea3b7f44f7a820a5504",
+                "url": "https://api.github.com/repos/symfony/config/zipball/b1d8f0d9341ea1d378b8b043ba90739f37c49d36",
+                "reference": "b1d8f0d9341ea1d378b8b043ba90739f37c49d36",
                 "shasum": ""
             },
             "require": {
@@ -2362,20 +2362,20 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
-            "time": "2020-05-23T09:11:46+00:00"
+            "time": "2020-07-15T08:27:46+00:00"
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v4.4.10",
+            "version": "v4.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "a37cc0a90fec178768aa5048fea9251efde591c5"
+                "reference": "f33a28edd42708ed579377391b3a556bcd6a626d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/a37cc0a90fec178768aa5048fea9251efde591c5",
-                "reference": "a37cc0a90fec178768aa5048fea9251efde591c5",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/f33a28edd42708ed579377391b3a556bcd6a626d",
+                "reference": "f33a28edd42708ed579377391b3a556bcd6a626d",
                 "shasum": ""
             },
             "require": {
@@ -2435,11 +2435,11 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "https://symfony.com",
-            "time": "2020-06-12T07:37:04+00:00"
+            "time": "2020-07-23T08:31:43+00:00"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v4.4.10",
+            "version": "v4.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
