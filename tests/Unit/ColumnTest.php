@@ -16,7 +16,7 @@ class ColumnTest extends TestCase
 {
     public function testItDefinition(): void
     {
-        $schemaAttribute = new SchemaAttribute('foo', 'string', [
+        $schemaAttribute = new SchemaAttribute('foo', 'integer', [
             'min' => 10,
             'max' => 100,
         ]);
@@ -40,6 +40,7 @@ class ColumnTest extends TestCase
         $schemaAttribute = new SchemaAttribute('foo', 'integer', [
             'pk' => true,
             'ai' => true,
+            'required' => true,
         ]);
 
         $column = new Column($schemaAttribute);

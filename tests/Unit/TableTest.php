@@ -32,7 +32,6 @@ class TableTest extends TestCase
             Keyword::NAME => 'baz',
             Keyword::DATATYPE => 'integer',
             Keyword::CONSTRAINTS => [
-                'ai' => true,
                 'min' => 10,
                 'max' => 100,
             ],

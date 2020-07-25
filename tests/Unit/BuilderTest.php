@@ -12,8 +12,8 @@ namespace FlexPHP\Database\Tests\Unit;
 use Exception;
 use FlexPHP\Database\Builder;
 use FlexPHP\Database\Tests\TestCase;
-use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Schema;
+use FlexPHP\Schema\SchemaAttribute;
 use FlexPHP\Schema\SchemaInterface;
 
 class BuilderTest extends TestCase
@@ -85,7 +85,7 @@ T
         $builder->createTable($this->getSchema());
         $this->assertEquals(<<<T
 CREATE TABLE bar (
-    foo VARCHAR(255) DEFAULT NULL COMMENT 'foo'
+    foo INT DEFAULT NULL COMMENT 'foo'
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
 T
 , $builder->toSql());
@@ -97,7 +97,7 @@ T
         $builder->createTable($this->getSchema());
         $this->assertEquals(<<<T
 CREATE TABLE bar (
-    foo NVARCHAR(255)
+    foo INT
 );
 
 EXEC sp_addextendedproperty N'MS_Description', N'foo', N'SCHEMA', 'dbo', N'TABLE', 'bar', N'COLUMN', foo;
@@ -112,50 +112,14 @@ T
         $password = 'password';
         $host = 'host';
         $schema = new Schema('bar', 'title', [
-            [
-                Keyword::NAME => 'Pk',
-                Keyword::DATATYPE => 'integer',
-                Keyword::CONSTRAINTS => [
-                    'ai' => true,
-                    'minlength' => 10,
-                    'maxlength' => 100,
-                ],
-            ],
-            [
-                Keyword::NAME => 'foo',
-                Keyword::DATATYPE => 'string',
-                Keyword::CONSTRAINTS => [
-                    'minlength' => 10,
-                    'maxlength' => 100,
-                ],
-            ],
-            [
-                Keyword::NAME => 'bar',
-                Keyword::DATATYPE => 'integer',
-                Keyword::CONSTRAINTS => [
-                    'min' => 10,
-                    'max' => 100,
-                ],
-            ],
+            new SchemaAttribute('Pk', 'string', 'pk|required'),
+            new SchemaAttribute('foo', 'string', 'minlength:10|maxlength:100'),
+            new SchemaAttribute('bar', 'integer', 'min:10|max'),
         ]);
 
         $schemaFk = new Schema('fuz', 'title', [
-            [
-                Keyword::NAME => 'Pk',
-                Keyword::DATATYPE => 'string',
-                Keyword::CONSTRAINTS => [
-                    'ai' => true,
-                    'minlength' => 10,
-                    'maxlength' => 100,
-                ],
-            ],
-            [
-                Keyword::NAME => 'barId',
-                Keyword::DATATYPE => 'integer',
-                Keyword::CONSTRAINTS => [
-                    'fk' => 'bar',
-                ],
-            ],
+            new SchemaAttribute('Pk', 'integer', 'pk|ai|required'),
+            new SchemaAttribute('barId', 'integer', 'fk:bar'),
         ]);
 
         $builder = new Builder('MySQL');
@@ -170,15 +134,17 @@ CREATE DATABASE $dbname CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 CREATE USER '$username'@'$host' IDENTIFIED BY '$password';
 
 CREATE TABLE bar (
-    Pk INT AUTO_INCREMENT DEFAULT NULL COMMENT 'Pk',
+    Pk VARCHAR(255) NOT NULL COMMENT 'Pk',
     foo VARCHAR(100) DEFAULT NULL COMMENT 'foo',
-    bar INT DEFAULT NULL COMMENT 'bar'
+    bar INT DEFAULT NULL COMMENT 'bar',
+    PRIMARY KEY(Pk)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
 
 CREATE TABLE fuz (
-    Pk VARCHAR(100) DEFAULT NULL COMMENT 'Pk',
+    Pk INT AUTO_INCREMENT NOT NULL COMMENT 'Pk',
     barId INT DEFAULT NULL COMMENT 'barId',
-    INDEX IDX_51837B119A5BAE65 (barId)
+    INDEX IDX_51837B119A5BAE65 (barId),
+    PRIMARY KEY(Pk)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
 
 ALTER TABLE fuz ADD CONSTRAINT FK_51837B119A5BAE65 FOREIGN KEY (barId) REFERENCES bar (id);
@@ -188,13 +154,11 @@ T
 
     public function getSchema(): SchemaInterface
     {
-        return new Schema('bar', 'title', [[
-            Keyword::NAME => 'foo',
-            Keyword::DATATYPE => 'string',
-            Keyword::CONSTRAINTS => [
+        return new Schema('bar', 'title', [
+            new SchemaAttribute('foo', 'integer', [
                 'min' => 10,
                 'max' => 100,
-            ],
-        ]]);
+            ]),
+        ]);
     }
 }
