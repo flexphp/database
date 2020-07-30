@@ -152,6 +152,73 @@ T
 , $builder->toSql());
     }
 
+    public function testItConstraints(): void
+    {
+        $dbname = 'complete';
+        $username = 'username';
+        $password = 'password';
+        $host = 'host';
+        $schema = new Schema('bar', 'title', [
+            new SchemaAttribute('Pk', 'string', 'pk|required'),
+            new SchemaAttribute('foo', 'string', 'minlength:10|maxlength:100'),
+            new SchemaAttribute('bar', 'integer', 'min:10|max'),
+        ]);
+
+        $schemaFk = new Schema('fuz', 'title', [
+            new SchemaAttribute('Pk', 'integer', 'pk|ai|required'),
+            new SchemaAttribute('barId', 'integer', 'fk:bar'),
+        ]);
+
+        $schemaFk2 = new Schema('baz', 'title', [
+            new SchemaAttribute('Pk', 'integer', 'pk|ai|required'),
+            new SchemaAttribute('fuzId', 'integer', 'fk:fuz'),
+            new SchemaAttribute('barId', 'integer', 'fk:bar'),
+        ]);
+
+        $builder = new Builder('MySQL');
+        $builder->createDatabase($dbname);
+        $builder->createUser($username, $password, $host);
+        $builder->createTable($schema);
+        $builder->createTable($schemaFk);
+        $builder->createTable($schemaFk2);
+
+        $this->assertEquals(<<<T
+CREATE DATABASE $dbname CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
+CREATE USER '$username'@'$host' IDENTIFIED BY '$password';
+
+CREATE TABLE bar (
+    Pk VARCHAR(255) NOT NULL COMMENT 'Pk',
+    foo VARCHAR(100) DEFAULT NULL COMMENT 'foo',
+    bar INT DEFAULT NULL COMMENT 'bar',
+    PRIMARY KEY(Pk)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+
+CREATE TABLE fuz (
+    Pk INT AUTO_INCREMENT NOT NULL COMMENT 'Pk',
+    barId INT DEFAULT NULL COMMENT 'barId',
+    INDEX IDX_51837B119A5BAE65 (barId),
+    PRIMARY KEY(Pk)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+
+CREATE TABLE baz (
+    Pk INT AUTO_INCREMENT NOT NULL COMMENT 'Pk',
+    fuzId INT DEFAULT NULL COMMENT 'fuzId',
+    barId INT DEFAULT NULL COMMENT 'barId',
+    INDEX IDX_78240498BEB399D5 (fuzId),
+    INDEX IDX_782404989A5BAE65 (barId),
+    PRIMARY KEY(Pk)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+
+ALTER TABLE fuz ADD CONSTRAINT FK_51837B119A5BAE65 FOREIGN KEY (barId) REFERENCES bar (id);
+
+ALTER TABLE baz ADD CONSTRAINT FK_78240498BEB399D5 FOREIGN KEY (fuzId) REFERENCES fuz (id);
+
+ALTER TABLE baz ADD CONSTRAINT FK_782404989A5BAE65 FOREIGN KEY (barId) REFERENCES bar (id);
+T
+, $builder->toSql());
+    }
+
     public function getSchema(): SchemaInterface
     {
         return new Schema('bar', 'title', [

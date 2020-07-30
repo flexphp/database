@@ -51,6 +51,11 @@ final class Builder
     private $tables = [];
 
     /**
+     * @var array<int, string>
+     */
+    private $constraints = [];
+
+    /**
      * @var array<string, string>
      */
     private $platformSupport = [
@@ -114,7 +119,13 @@ final class Builder
             }
         }
 
-        $this->tables[] = $this->getPrettyTable(\implode(";\n\n", $this->DBALSchema->toSql($this->DBALPlatform))) . ';';
+        $sentences = $this->DBALSchema->toSql($this->DBALPlatform);
+
+        $this->tables[] = $this->getTable($sentences);
+
+        if (\count($sentences) > 1) {
+            $this->constraints[] = $this->getConstraints(\array_slice($sentences, 1));
+        }
     }
 
     public function toSql(): string
@@ -134,7 +145,21 @@ final class Builder
             $sql[] = \implode($glue, $this->tables);
         }
 
+        if (\count($this->constraints)) {
+            $sql[] = \implode($glue, $this->constraints);
+        }
+
         return \implode($glue, $sql);
+    }
+
+    private function getTable(array $sentences): string
+    {
+        return $this->getPrettyTable($sentences[0]) . ';';
+    }
+
+    private function getConstraints(array $sentences): string
+    {
+        return \implode(";\n\n", $sentences) . ';';
     }
 
     private function getCollateDatabase(): string
