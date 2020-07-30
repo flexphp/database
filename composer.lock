@@ -252,12 +252,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/flexphp/flex-schema.git",
-                "reference": "864385a55893dacd6049e3dab6e2e69d0bd7eb9c"
+                "reference": "6b671f9630ec7177066a9f4d7f61d7d457b2716e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flexphp/flex-schema/zipball/864385a55893dacd6049e3dab6e2e69d0bd7eb9c",
-                "reference": "864385a55893dacd6049e3dab6e2e69d0bd7eb9c",
+                "url": "https://api.github.com/repos/flexphp/flex-schema/zipball/6b671f9630ec7177066a9f4d7f61d7d457b2716e",
+                "reference": "6b671f9630ec7177066a9f4d7f61d7d457b2716e",
                 "shasum": ""
             },
             "require": {
@@ -289,7 +289,7 @@
                 }
             ],
             "description": "One schema, any framework",
-            "time": "2020-07-25T19:10:52+00:00"
+            "time": "2020-07-29T18:49:52+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
