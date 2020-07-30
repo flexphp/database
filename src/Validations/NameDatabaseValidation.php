@@ -32,7 +32,7 @@ final class NameDatabaseValidation implements ValidationInterface
 
         if (\count($violations)) {
             throw new DatabaseValidationException(
-                \sprintf("%1\$s:\n%2\$s", $this->name, $violations->get(0)->getPropertyPath())
+                \sprintf("Database name [%1\$s] invalid", $this->name)
             );
         }
     }

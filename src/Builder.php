@@ -12,6 +12,7 @@ namespace FlexPHP\Database;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Schema as DBALSchema;
 use Doctrine\DBAL\Schema\SchemaConfig as DBALSchemaConfig;
+use FlexPHP\Database\Validations\NameDatabaseValidation;
 use FlexPHP\Schema\SchemaInterface;
 
 final class Builder
@@ -81,6 +82,8 @@ final class Builder
 
     public function createDatabase(string $name): void
     {
+        (new NameDatabaseValidation($name))->validate();
+
         $this->databases[] = $this->DBALPlatform->getCreateDatabaseSQL($name)
             . ' ' . $this->getCollateDatabase()
             . ';';

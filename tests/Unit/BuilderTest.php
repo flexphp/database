@@ -9,8 +9,8 @@
  */
 namespace FlexPHP\Database\Tests\Unit;
 
-use Exception;
 use FlexPHP\Database\Builder;
+use FlexPHP\Database\Exception\DatabaseValidationException;
 use FlexPHP\Database\Tests\TestCase;
 use FlexPHP\Schema\Schema;
 use FlexPHP\Schema\SchemaAttribute;
@@ -20,10 +20,19 @@ class BuilderTest extends TestCase
 {
     public function testItPlatformErrorThrowException(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(DatabaseValidationException::class);
         $this->expectExceptionMessage('try: MySQL, SQLSrv');
 
         new Builder('Unknow');
+    }
+
+    public function testItDatabaseNameErrorThrowException(): void
+    {
+        $this->expectException(DatabaseValidationException::class);
+        $this->expectExceptionMessage('Database name [_db] invalid');
+
+        $builder = new Builder('MySQL');
+        $builder->createDatabase('_db');
     }
 
     public function testItCreateMySQLDatabase(): void
