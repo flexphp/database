@@ -12,6 +12,7 @@ namespace FlexPHP\Database;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Schema as DBALSchema;
 use Doctrine\DBAL\Schema\SchemaConfig as DBALSchemaConfig;
+use FlexPHP\Database\Exception\DatabaseValidationException;
 use FlexPHP\Database\Validations\NameDatabaseValidation;
 use FlexPHP\Schema\SchemaInterface;
 
@@ -67,7 +68,7 @@ final class Builder
     public function __construct(string $platform)
     {
         if (empty($this->platformSupport[$platform])) {
-            throw new \InvalidArgumentException(\sprintf(
+            throw new DatabaseValidationException(\sprintf(
                 'Platform %s not supported, try: %s',
                 $platform,
                 \implode(', ', \array_keys($this->platformSupport))
