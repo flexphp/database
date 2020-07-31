@@ -292,6 +292,29 @@ T
 , $builder->toSql());
     }
 
+    public function testItConstraintsFkErrorThrowException(): void
+    {
+        $this->expectException(DatabaseValidationException::class);
+        $this->expectExceptionMessage('Tables in foreign');
+
+        $schema = new Schema('bar', 'title', [
+            new SchemaAttribute('Pk', 'string', 'pk|required'),
+            new SchemaAttribute('foo', 'string', 'minlength:10|maxlength:100'),
+            new SchemaAttribute('bar', 'integer', 'min:10|max'),
+        ]);
+
+        $schemaFk = new Schema('fuz', 'title', [
+            new SchemaAttribute('Pk', 'integer', 'pk|ai|required'),
+            new SchemaAttribute('barId', 'integer', 'fk:notexist'),
+        ]);
+
+        $builder = new Builder('MySQL');
+        $builder->createTable($schema);
+        $builder->createTable($schemaFk);
+
+        $builder->toSql();
+    }
+
     public function getSchema(): SchemaInterface
     {
         return new Schema('bar', 'title', [

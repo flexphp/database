@@ -58,6 +58,16 @@ final class Builder
     private $constraints = [];
 
     /**
+     * @var array<int, string>
+     */
+    private $primaryTables = [];
+
+    /**
+     * @var array<int, string>
+     */
+    private $foreignTables = [];
+
+    /**
      * @var array<string, string>
      */
     private $platformSupport = [
@@ -129,6 +139,8 @@ final class Builder
 
         $DBALTable = $this->DBALSchema->createTable($table->getName());
 
+        $this->primaryTables[] = $table->getName();
+
         foreach ($table->getColumns() as $column) {
             $DBALTable->addColumn($column->getName(), $column->getType(), $column->getOptions());
 
@@ -140,6 +152,8 @@ final class Builder
                 $fkRel = $schema->fkRelations()[$column->getName()];
 
                 $DBALTable->addForeignKeyConstraint($fkRel['pkTable'], [$fkRel['pkId']], [$fkRel['fkId']]);
+
+                $this->foreignTables[] = $fkRel['pkTable'];
             }
         }
 
@@ -154,6 +168,8 @@ final class Builder
 
     public function toSql(): string
     {
+        $this->validateLogic();
+
         $sql = [];
         $glue = \str_repeat("\n", 2);
 
@@ -218,5 +234,16 @@ final class Builder
         }
 
         return $prettySql;
+    }
+
+    private function validateLogic(): void
+    {
+        $undefinedTables = \array_diff($this->foreignTables, $this->primaryTables);
+
+        if (count($undefinedTables) > 0) {
+            throw new DatabaseValidationException(
+                'Tables in foreign key not found: ' . \implode(', ', $undefinedTables)
+            );
+        }
     }
 }
