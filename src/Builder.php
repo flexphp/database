@@ -90,12 +90,32 @@ final class Builder
             . ';';
     }
 
-    public function createUser(string $name, string $password, string $host = ''): void
+    public function createDatabaseWithUse(string $name): void
     {
+        $this->createDatabase($name);
+
+        if ($this->platform === 'MySQL') {
+            $this->databases[] = "USE {$name};";
+        }
+    }
+
+    public function createUser(
+        string $name,
+        string $password,
+        string $host = '',
+        array $permissions = [],
+        string $database = '*',
+        string $table = '*'
+    ): void {
         $user = new User($name, $password, $host);
         $user->setPlatform($this->platform);
 
         $this->users[] = $user->toSqlCreate();
+
+        if (\count($permissions)) {
+            $user->setGrants($permissions, $database, $table);
+            $this->users[] = $user->toSqlPrivileges();
+        }
     }
 
     public function createTable(SchemaInterface $schema): void

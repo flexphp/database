@@ -59,6 +59,32 @@ T
 , $builder->toSql());
     }
 
+    public function testItCreateMySQLDatabaseWithUse(): void
+    {
+        $name = 'db';
+
+        $builder = new Builder('MySQL');
+        $builder->createDatabaseWithUse($name);
+        $this->assertEquals(<<<T
+CREATE DATABASE $name CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
+USE $name;
+T
+, $builder->toSql());
+    }
+
+    public function testItCreateSQLSrvDatabaseWithUse(): void
+    {
+        $name = 'db';
+
+        $builder = new Builder('SQLSrv');
+        $builder->createDatabaseWithUse($name);
+        $this->assertEquals(<<<T
+CREATE DATABASE $name COLLATE latin1_general_100_ci_ai_sc;
+T
+, $builder->toSql());
+    }
+
     public function testItCreateMySQLUser(): void
     {
         $name = 'mysql';
@@ -83,6 +109,40 @@ T
 CREATE LOGIN $name WITH PASSWORD = '$password';
 GO
 CREATE USER $name FOR LOGIN $name;
+GO
+T
+, $builder->toSql());
+    }
+
+    public function testItCreateMySQLUserWithGrants(): void
+    {
+        $name = 'mysql';
+        $password = 'p4sw00rd';
+
+        $builder = new Builder('MySQL');
+        $builder->createUser($name, $password, 'host', ['ALL PRIVILEGES']);
+        $this->assertEquals(<<<T
+CREATE USER '$name'@'host' IDENTIFIED BY '$password';
+
+GRANT ALL PRIVILEGES ON *.* TO '$name'@'host';
+T
+, $builder->toSql());
+    }
+
+    public function testItCreateSQLSrvUserWithGrants(): void
+    {
+        $name = 'sqlsrv';
+        $password = 'p4sw00rd';
+
+        $builder = new Builder('SQLSrv');
+        $builder->createUser($name, $password, 'host', ['ALL PRIVILEGES']);
+        $this->assertEquals(<<<T
+CREATE LOGIN $name WITH PASSWORD = '$password';
+GO
+CREATE USER $name FOR LOGIN $name;
+GO
+
+GRANT ALL TO sqlsrv;
 GO
 T
 , $builder->toSql());
@@ -132,15 +192,19 @@ T
         ]);
 
         $builder = new Builder('MySQL');
-        $builder->createDatabase($dbname);
-        $builder->createUser($username, $password, $host);
+        $builder->createDatabaseWithUse($dbname);
+        $builder->createUser($username, $password, $host, ['ALL PRIVILEGES'], $dbname);
         $builder->createTable($schema);
         $builder->createTable($schemaFk);
 
         $this->assertEquals(<<<T
 CREATE DATABASE $dbname CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
+USE $dbname;
+
 CREATE USER '$username'@'$host' IDENTIFIED BY '$password';
+
+GRANT ALL PRIVILEGES ON $dbname.* TO '$username'@'$host';
 
 CREATE TABLE bar (
     Pk VARCHAR(255) NOT NULL COMMENT 'Pk',
