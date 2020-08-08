@@ -53,6 +53,7 @@ class NameDatabaseValidationTest extends TestCase
             ['d!b'],
             ['ñdb'],
             ['_db'],
+            ['db-one'],
             ['d' . \str_repeat('b', 63) . 'b'],
         ];
     }
@@ -62,7 +63,6 @@ class NameDatabaseValidationTest extends TestCase
         return [
             ['db'],
             ['db_one'],
-            ['db-one'],
             ['db1'],
             ['db_'],
             ['d' . \str_repeat('b', 61) . 'b'],

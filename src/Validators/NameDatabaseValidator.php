@@ -40,7 +40,7 @@ class NameDatabaseValidator
                 'allowEmptyString' => false,
             ]),
             new Regex([
-                'pattern' => '/^[a-zA-Z][a-zA-Z0-9_\-]*$/',
+                'pattern' => '/^[a-zA-Z][a-zA-Z0-9_]*$/',
             ]),
         ]);
     }
