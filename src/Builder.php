@@ -22,6 +22,8 @@ final class Builder
 
     public const PLATFORM_SQLSRV = 'SQLSrv';
 
+    public const PLATFORM_SQLITE = 'SQLite';
+
     /**
      * @var string
      */
@@ -73,6 +75,7 @@ final class Builder
     private $platformSupport = [
         self::PLATFORM_MYSQL => 'MySQL57',
         self::PLATFORM_SQLSRV => 'SQLServer2012',
+        self::PLATFORM_SQLITE => 'Sqlite',
     ];
 
     public function __construct(string $platform)
@@ -95,6 +98,10 @@ final class Builder
     {
         (new NameDatabaseValidation($name))->validate();
 
+        if ($this->isSQLitePlatform()) {
+            return;
+        }
+
         $this->databases[] = $this->DBALPlatform->getCreateDatabaseSQL($name)
             . ' ' . $this->getCollateDatabase()
             . ';';
@@ -104,7 +111,7 @@ final class Builder
     {
         $this->createDatabase($name);
 
-        if ($this->platform === 'MySQL') {
+        if ($this->isMySQLPlatform()) {
             $this->databases[] = "USE {$name};";
         }
     }
@@ -117,6 +124,10 @@ final class Builder
         string $database = '*',
         string $table = '*'
     ): void {
+        if ($this->isSQLitePlatform()) {
+            return;
+        }
+
         $user = new User($name, $password, $host);
         $user->setPlatform($this->platform);
 
@@ -142,7 +153,13 @@ final class Builder
         $this->primaryTables[] = $table->getName();
 
         foreach ($table->getColumns() as $column) {
-            $DBALTable->addColumn($column->getName(), $column->getType(), $column->getOptions());
+            $options = $column->getOptions();
+
+            if ($this->isSQLitePlatform()) {
+                unset($options['comment']);
+            }
+
+            $DBALTable->addColumn($column->getName(), $column->getType(), $options);
 
             if ($column->isPrimaryKey()) {
                 $DBALTable->setPrimaryKey([$column->getName()]);
@@ -213,9 +230,19 @@ final class Builder
         return $collate;
     }
 
+    private function isMySQLPlatform(): bool
+    {
+        return $this->platform === self::PLATFORM_MYSQL;
+    }
+
     private function isSQLSrvPlatform(): bool
     {
         return $this->platform === self::PLATFORM_SQLSRV;
+    }
+
+    private function isSQLitePlatform(): bool
+    {
+        return $this->platform === self::PLATFORM_SQLITE;
     }
 
     private function getPrettyTable(string $sql): string

@@ -59,6 +59,17 @@ T
 , $builder->toSql());
     }
 
+    public function testItCreateSQLiteDatabase(): void
+    {
+        $name = 'db';
+
+        $builder = new Builder('SQLite');
+        $builder->createDatabase($name);
+        $this->assertEquals(<<<T
+T
+, $builder->toSql());
+    }
+
     public function testItCreateMySQLDatabaseWithUse(): void
     {
         $name = 'db';
@@ -81,6 +92,17 @@ T
         $builder->createDatabaseWithUse($name);
         $this->assertEquals(<<<T
 CREATE DATABASE $name COLLATE latin1_general_100_ci_ai_sc;
+T
+, $builder->toSql());
+    }
+
+    public function testItCreateSQLiteDatabaseWithUse(): void
+    {
+        $name = 'db';
+
+        $builder = new Builder('SQLite');
+        $builder->createDatabaseWithUse($name);
+        $this->assertEquals(<<<T
 T
 , $builder->toSql());
     }
@@ -114,6 +136,18 @@ T
 , $builder->toSql());
     }
 
+    public function testItCreateSQLiteUser(): void
+    {
+        $name = 'sqlite';
+        $password = 'p4sw00rd';
+
+        $builder = new Builder('SQLite');
+        $builder->createUser($name, $password);
+        $this->assertEquals(<<<T
+T
+, $builder->toSql());
+    }
+
     public function testItCreateMySQLUserWithGrants(): void
     {
         $name = 'mysql';
@@ -142,8 +176,20 @@ GO
 CREATE USER $name FOR LOGIN $name;
 GO
 
-GRANT ALL TO sqlsrv;
+GRANT ALL TO $name;
 GO
+T
+, $builder->toSql());
+    }
+
+    public function testItCreateSQLiteUserWithGrants(): void
+    {
+        $name = 'sqlite';
+        $password = 'p4sw00rd';
+
+        $builder = new Builder('SQLite');
+        $builder->createUser($name, $password, 'host', ['ALL PRIVILEGES']);
+        $this->assertEquals(<<<T
 T
 , $builder->toSql());
     }
@@ -170,6 +216,18 @@ CREATE TABLE bar (
 );
 
 EXEC sp_addextendedproperty N'MS_Description', N'foo', N'SCHEMA', 'dbo', N'TABLE', 'bar', N'COLUMN', foo;
+T
+, $builder->toSql());
+    }
+
+    public function testItCreateSQLiteTable(): void
+    {
+        $builder = new Builder('SQLite');
+        $builder->createTable($this->getSchema());
+        $this->assertEquals(<<<T
+CREATE TABLE bar (
+    foo INTEGER DEFAULT NULL
+);
 T
 , $builder->toSql());
     }
