@@ -7,10 +7,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace FlexPHP\Database\Tests;
+namespace FlexPHP\Database\Tests\Unit;
 
 use FlexPHP\Database\Column;
 use FlexPHP\Database\Table;
+use FlexPHP\Database\Tests\TestCase;
 use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Schema;
 use FlexPHP\Schema\SchemaAttribute;
