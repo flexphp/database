@@ -206,7 +206,13 @@ final class Builder
             $sql[] = \implode($glue, $this->constraints);
         }
 
-        return \implode($glue, $sql);
+        $plain = \implode($glue, $sql);
+
+        if ($plain) {
+            return $plain . "\n";
+        }
+
+        return '';
     }
 
     private function getTable(array $sentences): string

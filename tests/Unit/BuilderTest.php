@@ -43,6 +43,7 @@ class BuilderTest extends TestCase
         $builder->createDatabase($name);
         $this->assertEquals(<<<T
 CREATE DATABASE $name CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
 T
 , $builder->toSql());
     }
@@ -55,6 +56,7 @@ T
         $builder->createDatabase($name);
         $this->assertEquals(<<<T
 CREATE DATABASE $name COLLATE latin1_general_100_ci_ai_sc;
+
 T
 , $builder->toSql());
     }
@@ -66,6 +68,7 @@ T
         $builder = new Builder('SQLite');
         $builder->createDatabase($name);
         $this->assertEquals(<<<T
+
 T
 , $builder->toSql());
     }
@@ -80,6 +83,7 @@ T
 CREATE DATABASE $name CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 USE $name;
+
 T
 , $builder->toSql());
     }
@@ -92,6 +96,7 @@ T
         $builder->createDatabaseWithUse($name);
         $this->assertEquals(<<<T
 CREATE DATABASE $name COLLATE latin1_general_100_ci_ai_sc;
+
 T
 , $builder->toSql());
     }
@@ -116,6 +121,7 @@ T
         $builder->createUser($name, $password);
         $this->assertEquals(<<<T
 CREATE USER '$name'@'%' IDENTIFIED BY '$password';
+
 T
 , $builder->toSql());
     }
@@ -132,6 +138,7 @@ CREATE LOGIN $name WITH PASSWORD = '$password';
 GO
 CREATE USER $name FOR LOGIN $name;
 GO
+
 T
 , $builder->toSql());
     }
@@ -159,6 +166,7 @@ T
 CREATE USER '$name'@'host' IDENTIFIED BY '$password';
 
 GRANT ALL PRIVILEGES ON *.* TO '$name'@'host';
+
 T
 , $builder->toSql());
     }
@@ -178,6 +186,7 @@ GO
 
 GRANT ALL TO $name;
 GO
+
 T
 , $builder->toSql());
     }
@@ -202,6 +211,7 @@ T
 CREATE TABLE bar (
     foo INT DEFAULT NULL COMMENT 'foo'
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+
 T
 , $builder->toSql());
     }
@@ -216,6 +226,7 @@ CREATE TABLE bar (
 );
 
 EXEC sp_addextendedproperty N'MS_Description', N'foo', N'SCHEMA', 'dbo', N'TABLE', 'bar', N'COLUMN', foo;
+
 T
 , $builder->toSql());
     }
@@ -228,6 +239,7 @@ T
 CREATE TABLE bar (
     foo INTEGER DEFAULT NULL
 );
+
 T
 , $builder->toSql());
     }
@@ -279,6 +291,7 @@ CREATE TABLE fuz (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
 
 ALTER TABLE fuz ADD CONSTRAINT FK_51837B119A5BAE65 FOREIGN KEY (barId) REFERENCES bar (id);
+
 T
 , $builder->toSql());
     }
@@ -346,6 +359,7 @@ ALTER TABLE fuz ADD CONSTRAINT FK_51837B119A5BAE65 FOREIGN KEY (barId) REFERENCE
 ALTER TABLE baz ADD CONSTRAINT FK_78240498BEB399D5 FOREIGN KEY (fuzId) REFERENCES fuz (id);
 
 ALTER TABLE baz ADD CONSTRAINT FK_782404989A5BAE65 FOREIGN KEY (barId) REFERENCES bar (id);
+
 T
 , $builder->toSql());
     }
