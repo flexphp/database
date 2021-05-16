@@ -305,7 +305,7 @@ T
         $schema = new Schema('bar', 'title', [
             new SchemaAttribute('Pk', 'string', 'pk|required'),
             new SchemaAttribute('foo', 'string', 'minlength:10|maxlength:100'),
-            new SchemaAttribute('bar', 'integer', 'min:10|max:50'),
+            new SchemaAttribute('bar', 'integer', 'min:10|max:50|default:20'),
         ]);
 
         $schemaFk = new Schema('fuz', 'title', [
@@ -317,6 +317,7 @@ T
             new SchemaAttribute('Pk', 'integer', 'pk|ai|required'),
             new SchemaAttribute('fuzId', 'integer', 'fk:fuz'),
             new SchemaAttribute('barId', 'integer', 'fk:bar'),
+            new SchemaAttribute('string', 'string', 'default:DEFAULT'),
         ]);
 
         $builder = new Builder('MySQL');
@@ -334,7 +335,7 @@ CREATE USER '$username'@'$host' IDENTIFIED BY '$password';
 CREATE TABLE bar (
     Pk VARCHAR(255) NOT NULL COMMENT 'Pk',
     foo VARCHAR(100) DEFAULT NULL COMMENT 'foo',
-    bar INT DEFAULT NULL COMMENT 'bar',
+    bar INT DEFAULT 20 COMMENT 'bar',
     PRIMARY KEY(Pk)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 
@@ -349,6 +350,7 @@ CREATE TABLE baz (
     Pk INT AUTO_INCREMENT NOT NULL COMMENT 'Pk',
     fuzId INT DEFAULT NULL COMMENT 'fuzId',
     barId INT DEFAULT NULL COMMENT 'barId',
+    string VARCHAR(255) DEFAULT 'DEFAULT' COMMENT 'string',
     INDEX IDX_78240498BEB399D5 (fuzId),
     INDEX IDX_782404989A5BAE65 (barId),
     PRIMARY KEY(Pk)
