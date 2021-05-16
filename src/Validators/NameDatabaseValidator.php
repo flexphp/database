@@ -19,15 +19,9 @@ use Symfony\Component\Validator\Validation;
  */
 class NameDatabaseValidator
 {
-    /**
-     * @var int
-     */
-    private $minLength = 1;
+    private int $minLength = 1;
 
-    /**
-     * @var int
-     */
-    private $maxLength = 63;
+    private int $maxLength = 63;
 
     public function validate(string $name): ConstraintViolationListInterface
     {

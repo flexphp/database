@@ -14,10 +14,7 @@ use FlexPHP\Database\Validators\NameUserValidator;
 
 final class NameUserValidation implements ValidationInterface
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
     public function __construct(string $name)
     {

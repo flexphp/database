@@ -13,10 +13,7 @@ use FlexPHP\Schema\SchemaInterface;
 
 final class Table implements TableInterface
 {
-    /**
-     * @var SchemaInterface
-     */
-    private $schema;
+    private \FlexPHP\Schema\SchemaInterface $schema;
 
     public function __construct(SchemaInterface $schema)
     {

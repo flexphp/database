@@ -24,55 +24,49 @@ final class Builder
 
     public const PLATFORM_SQLITE = 'SQLite';
 
-    /**
-     * @var string
-     */
-    private $platform;
+    private string $platform;
 
     /**
      * @var AbstractPlatform
      */
     private $DBALPlatform;
 
-    /**
-     * @var DBALSchema
-     */
-    private $DBALSchema;
+    private ?\Doctrine\DBAL\Schema\Schema $DBALSchema = null;
 
     /**
      * @var array<int, string>
      */
-    private $databases = [];
+    private array $databases = [];
 
     /**
      * @var array<int, string>
      */
-    private $users = [];
+    private array $users = [];
 
     /**
      * @var array<int, string>
      */
-    private $tables = [];
+    private array $tables = [];
 
     /**
      * @var array<int, string>
      */
-    private $constraints = [];
+    private array $constraints = [];
 
     /**
      * @var array<int, string>
      */
-    private $primaryTables = [];
+    private array $primaryTables = [];
 
     /**
      * @var array<int, string>
      */
-    private $foreignTables = [];
+    private array $foreignTables = [];
 
     /**
      * @var array<string, string>
      */
-    private $platformSupport = [
+    private array $platformSupport = [
         self::PLATFORM_MYSQL => 'MySQL57',
         self::PLATFORM_SQLSRV => 'SQLServer2012',
         self::PLATFORM_SQLITE => 'Sqlite',

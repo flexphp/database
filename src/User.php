@@ -13,30 +13,18 @@ use FlexPHP\Database\Interfaces\UserFactoryInterface;
 
 final class User implements UserInterface
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var string
-     */
-    private $password;
+    private string $password;
 
-    /**
-     * @var string
-     */
-    private $host;
+    private string $host;
 
     /**
      * @var array<int, array>
      */
-    private $grants;
+    private ?array $grants = null;
 
-    /**
-     * @var string
-     */
-    private $platform = 'MySQL';
+    private string $platform = 'MySQL';
 
     public function __construct(string $name, string $password, string $host = '%')
     {

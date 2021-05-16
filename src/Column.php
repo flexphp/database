@@ -13,10 +13,7 @@ use FlexPHP\Schema\SchemaAttributeInterface;
 
 final class Column implements ColumnInterface
 {
-    /**
-     * @var SchemaAttributeInterface
-     */
-    private $schemaAttribute;
+    private \FlexPHP\Schema\SchemaAttributeInterface $schemaAttribute;
 
     public function __construct(SchemaAttributeInterface $schemaAttribute)
     {
