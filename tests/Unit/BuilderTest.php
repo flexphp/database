@@ -210,7 +210,7 @@ T
         $this->assertEquals(<<<T
 CREATE TABLE bar (
     foo INT DEFAULT NULL COMMENT 'foo'
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 
 T
 , $builder->toSql());
@@ -253,7 +253,7 @@ T
         $schema = new Schema('bar', 'title', [
             new SchemaAttribute('Pk', 'string', 'pk|required'),
             new SchemaAttribute('foo', 'string', 'minlength:10|maxlength:100'),
-            new SchemaAttribute('bar', 'integer', 'min:10|max'),
+            new SchemaAttribute('bar', 'integer', 'min:10|max:50'),
         ]);
 
         $schemaFk = new Schema('fuz', 'title', [
@@ -281,14 +281,14 @@ CREATE TABLE bar (
     foo VARCHAR(100) DEFAULT NULL COMMENT 'foo',
     bar INT DEFAULT NULL COMMENT 'bar',
     PRIMARY KEY(Pk)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 
 CREATE TABLE fuz (
     Pk INT AUTO_INCREMENT NOT NULL COMMENT 'Pk',
     barId INT DEFAULT NULL COMMENT 'barId',
     INDEX IDX_51837B119A5BAE65 (barId),
     PRIMARY KEY(Pk)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 
 ALTER TABLE fuz ADD CONSTRAINT FK_51837B119A5BAE65 FOREIGN KEY (barId) REFERENCES bar (id);
 
@@ -305,7 +305,7 @@ T
         $schema = new Schema('bar', 'title', [
             new SchemaAttribute('Pk', 'string', 'pk|required'),
             new SchemaAttribute('foo', 'string', 'minlength:10|maxlength:100'),
-            new SchemaAttribute('bar', 'integer', 'min:10|max'),
+            new SchemaAttribute('bar', 'integer', 'min:10|max:50'),
         ]);
 
         $schemaFk = new Schema('fuz', 'title', [
@@ -336,14 +336,14 @@ CREATE TABLE bar (
     foo VARCHAR(100) DEFAULT NULL COMMENT 'foo',
     bar INT DEFAULT NULL COMMENT 'bar',
     PRIMARY KEY(Pk)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 
 CREATE TABLE fuz (
     Pk INT AUTO_INCREMENT NOT NULL COMMENT 'Pk',
     barId INT DEFAULT NULL COMMENT 'barId',
     INDEX IDX_51837B119A5BAE65 (barId),
     PRIMARY KEY(Pk)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 
 CREATE TABLE baz (
     Pk INT AUTO_INCREMENT NOT NULL COMMENT 'Pk',
@@ -352,7 +352,7 @@ CREATE TABLE baz (
     INDEX IDX_78240498BEB399D5 (fuzId),
     INDEX IDX_782404989A5BAE65 (barId),
     PRIMARY KEY(Pk)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 
 ALTER TABLE fuz ADD CONSTRAINT FK_51837B119A5BAE65 FOREIGN KEY (barId) REFERENCES bar (id);
 
@@ -372,7 +372,7 @@ T
         $schema = new Schema('bar', 'title', [
             new SchemaAttribute('Pk', 'string', 'pk|required'),
             new SchemaAttribute('foo', 'string', 'minlength:10|maxlength:100'),
-            new SchemaAttribute('bar', 'integer', 'min:10|max'),
+            new SchemaAttribute('bar', 'integer', 'min:10|max:50'),
         ]);
 
         $schemaFk = new Schema('fuz', 'title', [
