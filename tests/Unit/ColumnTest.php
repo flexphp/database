@@ -33,6 +33,7 @@ class ColumnTest extends TestCase
             'notnull' => $schemaAttribute->isRequired(),
             'autoincrement' => $schemaAttribute->isAi(),
             'comment' => $schemaAttribute->name(),
+            'default' => $schemaAttribute->default(),
         ], $column->getOptions());
     }
 
@@ -55,6 +56,7 @@ class ColumnTest extends TestCase
             'notnull' => $schemaAttribute->isRequired(),
             'autoincrement' => $schemaAttribute->isAi(),
             'comment' => $schemaAttribute->name(),
+            'default' => $schemaAttribute->default(),
         ], $column->getOptions());
     }
 
@@ -75,6 +77,41 @@ class ColumnTest extends TestCase
             'notnull' => $schemaAttribute->isRequired(),
             'autoincrement' => $schemaAttribute->isAi(),
             'comment' => $schemaAttribute->name(),
+            'default' => $schemaAttribute->default(),
         ], $column->getOptions());
+    }
+
+    /**
+     * @dataProvider getDefault
+     *
+     * @param mixed $default
+     */
+    public function testItDefinitionDefault(string $dataType, $default): void
+    {
+        $schemaAttribute = new SchemaAttribute('bar', $dataType, [
+            'default' => $default,
+        ]);
+
+        $column = new Column($schemaAttribute);
+
+        $this->assertEquals($schemaAttribute->name(), $column->getName());
+        $this->assertEquals($dataType, $column->getType());
+        $this->assertEquals([
+            'length' => $schemaAttribute->maxLength(),
+            'notnull' => $schemaAttribute->isRequired(),
+            'autoincrement' => $schemaAttribute->isAi(),
+            'comment' => $schemaAttribute->name(),
+            'default' => $schemaAttribute->default(),
+        ], $column->getOptions());
+    }
+
+    public function getDefault(): array
+    {
+        return [
+            ['string', null],
+            ['string', ''],
+            ['string', '1'],
+            ['integer', '1'],
+        ];
     }
 }

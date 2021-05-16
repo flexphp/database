@@ -47,11 +47,11 @@ final class Column implements ColumnInterface
             'notnull' => $this->schemaAttribute->isRequired(),
             'autoincrement' => $this->schemaAttribute->isAi(),
             'comment' => $this->schemaAttribute->name(),
+            'default' => $this->schemaAttribute->default(),
             // 'precision' => $this->schemaAttribute->name(),
             // 'scale' => $this->schemaAttribute->name(),
             // 'unsigned' => $this->schemaAttribute->name(),
             // 'fixed' => $this->schemaAttribute->name(),
-            // 'default' => $this->schemaAttribute->name(),
         ];
     }
 }
