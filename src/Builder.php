@@ -10,8 +10,8 @@
 namespace FlexPHP\Database;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Schema\Schema as DBALSchema;
-use Doctrine\DBAL\Schema\SchemaConfig as DBALSchemaConfig;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\SchemaConfig;
 use FlexPHP\Database\Exception\DatabaseValidationException;
 use FlexPHP\Database\Validations\NameDatabaseValidation;
 use FlexPHP\Schema\SchemaInterface;
@@ -24,55 +24,49 @@ final class Builder
 
     public const PLATFORM_SQLITE = 'SQLite';
 
-    /**
-     * @var string
-     */
-    private $platform;
+    private string $platform;
 
     /**
      * @var AbstractPlatform
      */
     private $DBALPlatform;
 
-    /**
-     * @var DBALSchema
-     */
-    private $DBALSchema;
+    private ?\Doctrine\DBAL\Schema\Schema $DBALSchema = null;
 
     /**
      * @var array<int, string>
      */
-    private $databases = [];
+    private array $databases = [];
 
     /**
      * @var array<int, string>
      */
-    private $users = [];
+    private array $users = [];
 
     /**
      * @var array<int, string>
      */
-    private $tables = [];
+    private array $tables = [];
 
     /**
      * @var array<int, string>
      */
-    private $constraints = [];
+    private array $constraints = [];
 
     /**
      * @var array<int, string>
      */
-    private $primaryTables = [];
+    private array $primaryTables = [];
 
     /**
      * @var array<int, string>
      */
-    private $foreignTables = [];
+    private array $foreignTables = [];
 
     /**
      * @var array<string, string>
      */
-    private $platformSupport = [
+    private array $platformSupport = [
         self::PLATFORM_MYSQL => 'MySQL57',
         self::PLATFORM_SQLSRV => 'SQLServer2012',
         self::PLATFORM_SQLITE => 'Sqlite',
@@ -112,7 +106,7 @@ final class Builder
         $this->createDatabase($name);
 
         if ($this->isMySQLPlatform()) {
-            $this->databases[] = "USE {$name};";
+            $this->databases[] = sprintf('USE %s;', $name);
         }
     }
 
@@ -133,7 +127,7 @@ final class Builder
 
         $this->users[] = $user->toSqlCreate();
 
-        if (\count($permissions)) {
+        if (\count($permissions) > 0) {
             $user->setGrants($permissions, $database, $table);
             $this->users[] = $user->toSqlPrivileges();
         }
@@ -143,10 +137,10 @@ final class Builder
     {
         $table = new Table($schema);
 
-        $DBALSchemaConfig = new DBALSchemaConfig();
+        $DBALSchemaConfig = new SchemaConfig();
         $DBALSchemaConfig->setDefaultTableOptions($table->getOptions());
 
-        $this->DBALSchema = new DBALSchema([], [], $DBALSchemaConfig);
+        $this->DBALSchema = new Schema([], [], $DBALSchemaConfig);
 
         $DBALTable = $this->DBALSchema->createTable($table->getName());
 
@@ -190,25 +184,25 @@ final class Builder
         $sql = [];
         $glue = \str_repeat("\n", 2);
 
-        if (\count($this->databases)) {
+        if (\count($this->databases) > 0) {
             $sql[] = \implode($glue, $this->databases);
         }
 
-        if (\count($this->users)) {
+        if (\count($this->users) > 0) {
             $sql[] = \implode($glue, $this->users);
         }
 
-        if (\count($this->tables)) {
+        if (\count($this->tables) > 0) {
             $sql[] = \implode($glue, $this->tables);
         }
 
-        if (\count($this->constraints)) {
+        if (\count($this->constraints) > 0) {
             $sql[] = \implode($glue, $this->constraints);
         }
 
         $plain = \implode($glue, $sql);
 
-        if ($plain) {
+        if ($plain !== '') {
             return $plain . "\n";
         }
 
@@ -254,14 +248,14 @@ final class Builder
     private function getPrettyTable(string $sql): string
     {
         $tag = '<columns>';
-        $regExpColumns = "/\((?$tag.*)\)/";
+        $regExpColumns = sprintf('/\((?%s.*)\)/', $tag);
         $prettySql = $sql;
 
         \preg_match($regExpColumns, $sql, $matches);
 
         if (!empty($matches['columns'])) {
             $columns = $matches['columns'];
-            $table = \str_replace($columns, "\n    $tag\n", $sql);
+            $table = \str_replace($columns, "\n    {$tag}\n", $sql);
 
             $prettySql = \str_replace($tag, \str_replace(', ', ",\n    ", $columns), $table);
         }
