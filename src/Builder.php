@@ -127,7 +127,7 @@ final class Builder
 
         $this->users[] = $user->toSqlCreate();
 
-        if (\count($permissions)) {
+        if (\count($permissions) > 0) {
             $user->setGrants($permissions, $database, $table);
             $this->users[] = $user->toSqlPrivileges();
         }
@@ -184,25 +184,25 @@ final class Builder
         $sql = [];
         $glue = \str_repeat("\n", 2);
 
-        if (\count($this->databases)) {
+        if (\count($this->databases) > 0) {
             $sql[] = \implode($glue, $this->databases);
         }
 
-        if (\count($this->users)) {
+        if (\count($this->users) > 0) {
             $sql[] = \implode($glue, $this->users);
         }
 
-        if (\count($this->tables)) {
+        if (\count($this->tables) > 0) {
             $sql[] = \implode($glue, $this->tables);
         }
 
-        if (\count($this->constraints)) {
+        if (\count($this->constraints) > 0) {
             $sql[] = \implode($glue, $this->constraints);
         }
 
         $plain = \implode($glue, $sql);
 
-        if ($plain) {
+        if ($plain !== '') {
             return $plain . "\n";
         }
 

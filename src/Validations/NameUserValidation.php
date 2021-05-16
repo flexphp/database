@@ -27,7 +27,7 @@ final class NameUserValidation implements ValidationInterface
 
         $violations = $validator->validate($this->name);
 
-        if (\count($violations)) {
+        if (\count($violations) > 0) {
             throw new NameUserValidationException(
                 \sprintf("%1\$s:\n%2\$s", $this->name, $violations->get(0)->getPropertyPath())
             );
