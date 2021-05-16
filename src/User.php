@@ -22,7 +22,7 @@ final class User implements UserInterface
     /**
      * @var array<int, array>
      */
-    private ?array $grants = null;
+    private array $grants = [];
 
     private string $platform = 'MySQL';
 
