@@ -10,8 +10,8 @@
 namespace FlexPHP\Database;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Schema\Schema as DBALSchema;
-use Doctrine\DBAL\Schema\SchemaConfig as DBALSchemaConfig;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\SchemaConfig;
 use FlexPHP\Database\Exception\DatabaseValidationException;
 use FlexPHP\Database\Validations\NameDatabaseValidation;
 use FlexPHP\Schema\SchemaInterface;
@@ -106,7 +106,7 @@ final class Builder
         $this->createDatabase($name);
 
         if ($this->isMySQLPlatform()) {
-            $this->databases[] = "USE {$name};";
+            $this->databases[] = sprintf('USE %s;', $name);
         }
     }
 
@@ -137,10 +137,10 @@ final class Builder
     {
         $table = new Table($schema);
 
-        $DBALSchemaConfig = new DBALSchemaConfig();
+        $DBALSchemaConfig = new SchemaConfig();
         $DBALSchemaConfig->setDefaultTableOptions($table->getOptions());
 
-        $this->DBALSchema = new DBALSchema([], [], $DBALSchemaConfig);
+        $this->DBALSchema = new Schema([], [], $DBALSchemaConfig);
 
         $DBALTable = $this->DBALSchema->createTable($table->getName());
 
@@ -248,14 +248,14 @@ final class Builder
     private function getPrettyTable(string $sql): string
     {
         $tag = '<columns>';
-        $regExpColumns = "/\((?$tag.*)\)/";
+        $regExpColumns = sprintf('/\((?%s.*)\)/', $tag);
         $prettySql = $sql;
 
         \preg_match($regExpColumns, $sql, $matches);
 
         if (!empty($matches['columns'])) {
             $columns = $matches['columns'];
-            $table = \str_replace($columns, "\n    $tag\n", $sql);
+            $table = \str_replace($columns, "\n    {$tag}\n", $sql);
 
             $prettySql = \str_replace($tag, \str_replace(', ', ",\n    ", $columns), $table);
         }
