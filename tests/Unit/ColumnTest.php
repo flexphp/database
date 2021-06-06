@@ -110,8 +110,11 @@ class ColumnTest extends TestCase
         return [
             ['string', null],
             ['string', ''],
+            ['string', 'A'],
             ['string', '1'],
             ['integer', '1'],
+            ['float', '1.9'],
+            ['datetime', 'NOW'],
         ];
     }
 }
